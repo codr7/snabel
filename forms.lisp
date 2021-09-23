@@ -1,19 +1,19 @@
 (in-package clvm)
 
-(defstruct (id (:include form))
+(defstruct (id-form (:include form))
   (name (error "Missing name") :type keyword))
 
-(defun id (pos name)
-  (make-id :pos pos :name name))
+(defun id-form (name &key (pos *default-pos*))
+  (make-id-form :pos pos :name name))
 
-(defmethod emit ((f id))
+(defmethod emit ((f id-form))
   (error "Not implemented"))
 
-(defstruct (lit (:include form))
+(defstruct (lit-form (:include form))
   (val (error "Missing val") :type val))
 
-(defun lit (pos type data)
-  (make-lit :pos pos :val (val type data)))
+(defun lit-form (type data &key (pos *default-pos*))
+  (make-lit-form :pos pos :val (val type data)))
 
-(defmethod emit ((f lit))
-  (emit (make-push-op :form f :val (lit-val f))))
+(defmethod emit ((f lit-form))
+  (emit (make-push-op :form f :val (lit-form-val f))))

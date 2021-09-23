@@ -13,11 +13,15 @@
   (row -1 :type integer)
   (col -1 :type integer))
 
+(defvar *default-pos* (make-pos))
+
 (defstruct form
-  (pos (error "Missing pos") :type pos))
+  (pos *default-pos* :type pos))
+
+(defvar *default-form* (make-form :pos *default-pos*))
 
 (defstruct op
-  (form (error "Missing form") :type form))
+  (form *default-form* :type form))
 
 (defstruct lib
   (name (error "Missing name") :type keyword)
@@ -26,9 +30,9 @@
 (defstruct vm-type
   (name (error "Missing name") :type keyword))
 
-(defstruct val
-  (type (error "Missing type") :type vm-type)
+(defstruct (val (:conc-name))
+  (vm-type (error "Missing type") :type vm-type)
   (data (error "Missing data") :type t))
 
 (defun val (type data)
-  (make-val :type type :data data))
+  (make-val :vm-type type :data data))

@@ -8,3 +8,4 @@
 ** use lisp reader
 ** add vm.types hashtable
 *** lisp -> vm types
+* lila
