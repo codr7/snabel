@@ -1,3 +1,10 @@
 * add fib ops
+** add branch op
+*** add type.true-val?
+** add store/load ops
+*** add vm.regs
+**** const size
 * add asm parser
 ** use lisp reader
+** add vm.types hashtable
+*** lisp -> vm types
