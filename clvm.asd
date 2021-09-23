@@ -6,7 +6,8 @@
   :description "A VM toolkit"
   :licence "MIT"
   :serial t
-  :components ((:file "clvm")
+  :components ((:file "utils")
+	       (:file "clvm")
 	       (:file "libs")
 	       (:file "vm")
 	       (:file "forms")

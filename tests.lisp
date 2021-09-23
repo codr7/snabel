@@ -19,9 +19,8 @@
 
 (defun branch-tests ()
   (let* ((*vm* (make-instance 'vm))
-	 (bool (bool-type (abc-lib *vm*)))
 	 (int (int-type (abc-lib *vm*))))
-    (emit (push-op bool nil))
+    (emit (push-op int 0))
     (emit (branch-op :false))
     (emit (push-op int 1))
     (emit (goto-op :end))
