@@ -33,12 +33,19 @@
 (defun (setf lib-find) (val lib key)
   (setf (gethash key (bindings lib)) val))
 
-(defstruct vm-type
-  (name (error "Missing name") :type keyword))
-
+(defclass vm-type ()
+  ((name :initform (error "Missing name") :reader name)
+   (is-true? :initform (lambda (v)
+			 (declare (ignore v))
+			 t)
+	     :reader is-true?)))
+  
 (defstruct (val (:conc-name))
   (vm-type (error "Missing type") :type vm-type)
   (data (error "Missing data") :type t))
 
-(defun val (type data)
-  (make-val :vm-type type :data data))
+(defun val (vm-type data)
+  (make-val :vm-type vm-type :data data))
+
+(defmethod is-true? ((val val))
+  (funcall (is-true? (vm-type val)) (data val)))
