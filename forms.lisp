@@ -1,7 +1,10 @@
 (in-package clvm)
 
-(defstruct (literal (:include form))
+(defstruct (lit (:include form))
   (val (error "Missing val") :type val))
 
-(defmethod emit ((f literal))
-  (emit (make-push-op :form f :val (literal-val f))))
+(defun lit (pos type data)
+  (make-lit :pos pos :val (val type data)))
+
+(defmethod emit ((f lit))
+  (emit (make-push-op :form f :val (lit-val f))))
