@@ -23,9 +23,15 @@
 (defstruct op
   (form *default-form* :type form))
 
-(defstruct lib
-  (name (error "Missing name") :type keyword)
-  (bindings (make-hash-table)))
+(defclass lib ()
+  ((name :initform (error "Missing name") :reader name)
+   (bindings :initform (make-hash-table) :reader bindings)))
+
+(defun lib-find (lib key)
+  (gethash key (bindings lib)))
+
+(defun (setf lib-find) (val lib key)
+  (setf (gethash key (bindings lib)) val))
 
 (defstruct vm-type
   (name (error "Missing name") :type keyword))

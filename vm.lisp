@@ -1,9 +1,9 @@
 (in-package clvm)
 		 
-(defstruct (vm (:conc-name))
-  (abc-lib (make-abc-lib :name :abc) :type abc-lib)
-  (code (make-array 0 :element-type 'op :fill-pointer 0))
-  (stack (make-array 0 :element-type 'val :fill-pointer 0)))
+(defclass vm ()
+  ((abc-lib :initform (make-instance 'abc-lib) :reader abc-lib)
+   (code :initform (make-array 0 :element-type 'op :fill-pointer 0) :reader code)
+   (stack :initform (make-array 0 :element-type 'val :fill-pointer 0) :reader stack)))
 
 (defmethod emit ((op op))
   (vector-push-extend op (code *vm*)))
