@@ -1,2 +1,3 @@
+* add fib ops
 * add asm parser
 ** use lisp reader

@@ -8,8 +8,15 @@
 (defmethod emit ((op op))
   (vector-push-extend op (code *vm*)))
 
-(defun vm-eval (&key (pc 0))
-  (dotimes (i (- (length (code *vm*)) pc))
-    (let ((op (aref (code *vm*) (+ pc i))))
-      (eval (emit-lisp op)))))
+(defun vm-compile (&key (pc 0))
+  (let (out)
+    (dotimes (i (- (length (code *vm*)) pc))
+      (let ((op (aref (code *vm*) (+ pc i))))
+	(push (emit-lisp op) out)))
     
+    (eval `(lambda ()
+	     (tagbody
+		,@(nreverse out))))))
+
+(defun vm-eval (&key (pc 0))
+  (funcall (vm-compile :pc 0)))

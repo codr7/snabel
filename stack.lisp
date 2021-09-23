@@ -4,4 +4,5 @@
   (vector-push-extend (make-val :type type :data data) (stack *vm*)))
 
 (defun vm-pop ()
-  (vector-pop (stack *vm*)))
+  (unless (zerop (length (stack *vm*)))
+    (vector-pop (stack *vm*))))

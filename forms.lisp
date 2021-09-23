@@ -1,5 +1,14 @@
 (in-package clvm)
 
+(defstruct (id (:include form))
+  (name (error "Missing name") :type keyword))
+
+(defun id (pos name)
+  (make-id :pos pos :name name))
+
+(defmethod emit ((f id))
+  (error "Not implemented"))
+
 (defstruct (lit (:include form))
   (val (error "Missing val") :type val))
 
