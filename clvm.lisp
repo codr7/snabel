@@ -1,7 +1,14 @@
 (defpackage clvm
   (:use cl)
   (:import-from utils sym)
-  (:export *version* form op pos val-type val))
+  (:export *version*
+	   abc-lib column data form
+	   id-form int-type
+	   line lit-form
+	   op
+	   parse-int parse-ws pos
+	   source
+	   val vm-type))
 
 (in-package clvm)
 
@@ -9,7 +16,7 @@
 
 (defvar *vm*)
 
-(defstruct pos
+(defstruct (pos (:conc-name))
   (source "n/a" :type string)
   (line -1 :type integer)
   (column -1 :type integer))

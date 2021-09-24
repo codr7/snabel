@@ -13,4 +13,6 @@
 	       (:file "forms")
 	       (:file "ops")
 	       (:file "stack")
+	       (:file "parsers")
+	       (:file "lila")
 	       (:file "tests")))

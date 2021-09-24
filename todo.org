@@ -2,5 +2,7 @@
 ** add store/load ops
 *** add vm.regs
 **** const size
-* add call stack
+** add call op
+*** add vm.calls
 * lila
+** add repl

@@ -1,6 +1,6 @@
 (defpackage utils
   (:use cl)
-  (:export sym))
+  (:export sym ws?))
 
 (in-package utils)
 
@@ -8,3 +8,7 @@
   (intern (with-output-to-string (out)
 	    (dolist (a args)
 	      (princ (if (stringp a) (string-upcase a) a) out)))))
+
+(defun ws? (c)
+  (when (or (char= c #\space) (char= c #\tab) (char= c #\newline))
+    c))
