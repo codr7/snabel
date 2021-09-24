@@ -1,12 +1,14 @@
 (defpackage clvm
   (:use cl)
   (:import-from utils sym)
-  (:export *version*
-	   abc-lib column data form
+  (:export *min-column* *min-line* *version*
+	   abc-lib column data
+	   emit eval
+	   form
 	   id-form int-type
 	   line lit-form
 	   op
-	   parse-int parse-ws pos
+	   parse-int parse-ws pc pos
 	   source
 	   val vm-type))
 
@@ -16,13 +18,19 @@
 
 (defvar *vm*)
 
+(defvar *min-line* 1)
+(defvar *min-column* 0)
+
 (defstruct (pos (:conc-name))
   (source "n/a" :type string)
-  (line -1 :type integer)
-  (column -1 :type integer))
+  (line *min-line* :type integer)
+  (column *min-column* :type integer))
 
 (defvar *default-pos* (make-pos))
 
+(defun pos (source &optional (line *min-line*) (column *min-column*))
+  (make-pos :source source :line line :column column))
+  
 (defstruct form
   (pos *default-pos* :type pos))
 

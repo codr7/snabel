@@ -1,3 +1,6 @@
+* implement id emit
+** add scope/bindings
+* add (clvm:dump-stack out)
 * add fib ops
 ** add store/load ops
 *** add vm.regs

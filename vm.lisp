@@ -20,3 +20,7 @@
 
 (defun vm-eval (&key (pc 0))
   (funcall (vm-compile :pc 0)))
+
+(defun pc ()
+  (length (code *vm*)))
+  
