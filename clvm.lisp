@@ -7,19 +7,21 @@
 	   form
 	   id-form int-type
 	   line lit-form
+	   new-branch-op new-goto-op new-pos new-push-op new-id-form new-lit-form new-val new-vm
 	   op
 	   parse-int parse-ws pc pos
 	   source
-	   val vm-type))
+	   vm-type))
 
 (in-package clvm)
 
 (define-symbol-macro *version* 1)
+(define-symbol-macro *max-reg-count* 64)
+
+(define-symbol-macro *min-line* 1)
+(define-symbol-macro *min-column* 0)
 
 (defvar *vm*)
-
-(defvar *min-line* 1)
-(defvar *min-column* 0)
 
 (defstruct (pos (:conc-name))
   (source "n/a" :type string)
@@ -28,7 +30,7 @@
 
 (defvar *default-pos* (make-pos))
 
-(defun pos (source &optional (line *min-line*) (column *min-column*))
+(defun new-pos (source &optional (line *min-line*) (column *min-column*))
   (make-pos :source source :line line :column column))
   
 (defstruct form
@@ -38,9 +40,6 @@
 
 (defstruct op
   (form *default-form* :type form))
-
-(defun op (name)
-  (fdefinition (sym name '-op)))
 
 (defclass lib ()
   ((name :initform (error "Missing name") :reader name)
@@ -54,17 +53,17 @@
 
 (defclass vm-type ()
   ((name :initform (error "Missing name") :reader name)
-   (is-true? :initform (lambda (v)
-			 (declare (ignore v))
-			 t)
-	     :reader is-true?)))
+   (val-is-true? :initform (lambda (v)
+			     (declare (ignore v))
+			     t)
+		 :reader val-is-true?)))
 
 (defstruct (val (:conc-name))
   (vm-type (error "Missing type") :type vm-type)
   (data (error "Missing data") :type t))
 
-(defun val (vm-type data)
+(defun new-val (vm-type data)
   (make-val :vm-type vm-type :data data))
 
 (defmethod is-true? ((val val))
-  (funcall (is-true? (vm-type val)) (data val)))
+  (funcall (val-is-true? (vm-type val)) (data val)))

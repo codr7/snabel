@@ -9,6 +9,7 @@
   :components ((:file "utils")
 	       (:file "clvm")
 	       (:file "libs")
+	       (:file "scope")
 	       (:file "vm")
 	       (:file "forms")
 	       (:file "ops")

@@ -37,7 +37,7 @@
     (fmt "Press Return twice to evaluate forms, Ctrl+C exits.~%")
     (fmt "May the source be with you!~%~%")
 
-    (let ((pos (pos "repl")))
+    (let ((pos (new-pos "repl")))
       (with-output-to-string (buf)
 	(labels ((get-line ()
 		   (fmt "  ")

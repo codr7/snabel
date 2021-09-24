@@ -5,7 +5,7 @@
 (defstruct (branch-op (:include op) (:conc-name branch-))
   (false-label (error "Missing false-label") :type keyword))
 
-(defun branch-op (false-label &key (form *default-form*))
+(defun new-branch-op (false-label &key (form *default-form*))
   (make-branch-op :form form :false-label false-label))
 
 (defmethod emit-lisp ((op branch-op))
@@ -17,7 +17,7 @@
 (defstruct (goto-op (:include op) (:conc-name goto-))
   (label (error "Missing label") :type keyword))
 
-(defun goto-op (label &key (form *default-form*))
+(defun new-goto-op (label &key (form *default-form*))
   (make-goto-op :form form :label label))
 
 (defmethod emit-lisp ((op goto-op))
@@ -28,7 +28,7 @@
 (defstruct (label-op (:include op) (:conc-name label-))
   (name (error "Missing name") :type keyword))
 
-(defun label-op (name &key (form *default-form*))
+(defun new-label-op (name &key (form *default-form*))
   (make-label-op :form form :name name))
 
 (defmethod emit-lisp ((op label-op))
@@ -39,8 +39,8 @@
 (defstruct (push-op (:include op) (:conc-name push-))
   (val (error "Missing val") :type val))
 
-(defun push-op (vm-type data &key (form *default-form*))
-  (make-push-op :form form :val (val vm-type data)))
+(defun new-push-op (vm-type data &key (form *default-form*))
+  (make-push-op :form form :val (new-val vm-type data)))
 
 (defmethod emit-lisp ((op push-op))
   `(vm-push ,(vm-type (push-val op)) ,(data (push-val op))))

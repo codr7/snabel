@@ -1,11 +1,8 @@
-* implement id emit
-** add scope/bindings
 * add (clvm:dump-stack out)
-* add fib ops
-** add store/load ops
-*** add vm.regs
-**** const size
-** add call op
-*** add vm.calls
-* lila
-** add repl
+** add (dump val :out)/type.val-dump
+*** default to print-object
+* add store/load ops
+* add call op
+** add vm.calls
+* add lila call parser
+
