@@ -25,3 +25,6 @@
 ** optional val
 *** pop if nil
 
+(let ((*vm* (new-vm))) 
+  (lib-import (abc-lib *vm*))
+  (repl))

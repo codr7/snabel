@@ -10,7 +10,6 @@
 	       (:file "snabl")
 	       (:file "pos")
 	       (:file "val")
-	       (:file "lib")
 	       (:file "libs")
 	       (:file "scope")
 	       (:file "vm")

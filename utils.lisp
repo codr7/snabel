@@ -1,11 +1,20 @@
 (defpackage utils
   (:use cl)
-  (:export char-digit kw reverse-vector sym ws?))
+  (:export char-digit dohash kw reverse-vector sym ws?))
 
 (in-package utils)
 
 (defun char-digit (c)
   (- (char-code c) (char-code #\0)))
+
+(defmacro dohash ((key val tbl) &body body)
+  (let ((i (gensym)) (ok? (gensym)))
+    `(with-hash-table-iterator (,i ,tbl)
+       (do () (nil)
+         (multiple-value-bind (,ok? ,key ,val) (,i)
+           (declare (ignorable ,key ,val))
+           (unless ,ok? (return))
+           ,@body)))))
 
 (defun kw (&rest args)
   (intern (with-output-to-string (out)

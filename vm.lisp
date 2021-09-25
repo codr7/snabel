@@ -23,8 +23,8 @@
     (labels ((rec (in)
 	       (when in
 		 (rec (emit-form (first in) (rest in))))))
-      (rec (reverse forms))))
-  (reverse-vector (code *vm*) start-pc))
+      (rec (reverse forms)))
+    (reverse-vector (code *vm*) start-pc)))
 
 (defun vm-compile (&key (pc 0))
   (let (out)
