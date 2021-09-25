@@ -22,7 +22,7 @@
 (defun kw (&rest args)
   (intern (with-output-to-string (out)
 	    (dolist (a args)
-	      (princ (if (stringp a) (string-upcase a) a) out)))
+	      (princ a out)))
 	  :keyword))
 
 (defun reverse-vector (vec &optional (start 0))

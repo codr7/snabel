@@ -1,4 +1,3 @@
-* bind types in lib
 * add prim struct/type
 ** call postfix
 ** call prims in id emit
@@ -19,9 +18,6 @@
 * add dot
 ** 1.+ 2
 ** shift in parser
-* add store op
-** optional val
-*** pop if nil
 
 (let ((*vm* (new-vm))) 
   (lib-import (abc-lib *vm*))

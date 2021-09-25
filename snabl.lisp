@@ -33,3 +33,6 @@
 			     (declare (ignore v))
 			     t)
 		 :reader val-is-true?)))
+
+(defmethod print-object ((obj vm-type) out)
+  (write-string (symbol-name (name obj))))
