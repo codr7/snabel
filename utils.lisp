@@ -1,9 +1,12 @@
 (defpackage utils
   (:use cl)
-  (:export char-digit dohash kw reverse-vector sym ws?))
+  (:export all? char-digit dohash kw reverse-vector sym ws?))
 
 (in-package utils)
 
+(defun all? (seq pred)
+  (not (find-if-not pred seq)))
+  
 (defun char-digit (c)
   (- (char-code c) (char-code #\0)))
 

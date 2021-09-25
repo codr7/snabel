@@ -14,12 +14,16 @@
   (make-id-form :pos pos :name name))
 
 (defmethod emit-form ((f id-form) in)
-  (let ((v (scope-find (id-name f))))
+  (let* ((k (id-name f))
+	 (ks (symbol-name k))
+	 (v (scope-find k)))
     (cond
+      ((all? ks (lambda (c) (char= c #\D)))
+       (emit-op (new-drop-op (length ks) :form f)))
       ((null v)
-       (error "Unknown id: ~a" (id-name f)))
+       (error "Unknown id: ~a" k))
       ((eq (vm-type v) (reg-type (abc-lib *vm*)))
-       (emit-op (new-load-op (data v))))
+       (emit-op (new-load-op (data v) :form f)))
       (t (emit-op (new-push-op (copy v) :form f)))))
   in)
 

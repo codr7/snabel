@@ -1,15 +1,13 @@
-* add macro struct/type
+* bind types in lib
+* add prim struct/type
 ** call postfix
-** call macros in id emit
-** add if prim
+** call prims in id emit
 * add cte
-** @(+ 1 2)
+** (+ 1 2)!
 ** parse as literal form
 * shift macro forms ending in ':'
 ** func: foo () -> foo () func
 ** use arg-count
-* import abc
-** bind types in lib
 * add refs
 ** &foo
 * add group parser

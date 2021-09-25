@@ -10,6 +10,12 @@
   (unless (zerop (length (stack *vm*)))
     (vector-pop (stack *vm*))))
 
+(defun drop (&optional (count 1))
+  (dotimes (i count)
+    (unless (vm-pop)
+      (return-from drop nil)))
+  t)
+     
 (defun dump-stack (&key (out *standard-output*))
   (princ #\[ out)
   (let ((stack (stack *vm*)))

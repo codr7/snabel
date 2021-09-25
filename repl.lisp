@@ -5,7 +5,7 @@
            (apply #'format out spec args)
            (finish-output out)))
     (fmt "Snabl v~a~%" *version*)
-    (fmt "Press Return twice to evaluate.~%~%")
+    (fmt "Press Return twice to evaluate.~%")
     (fmt "May the source be with you!~%~%")
 
     (with-output-to-string (buf)

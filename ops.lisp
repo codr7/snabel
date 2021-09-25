@@ -15,6 +15,18 @@
   `(unless (is-true? (vm-pop))
      (go ,(branch-false-label op))))
 
+;; drop
+
+(defstruct (drop-op (:include op) (:conc-name drop-))
+  (count (error "Missing count") :type integer))
+
+(defun new-drop-op (count &key (form *default-form*))
+  (make-drop-op :form form :count count))
+
+(defmethod emit-lisp ((op drop-op))
+  `(unless (drop ,(drop-count op))
+     (error "Stack is empty")))
+
 ;; goto
 
 (defstruct (goto-op (:include op) (:conc-name goto-))
