@@ -1,4 +1,4 @@
-(defpackage lila
+(defpackage snabl
   (:use cl)
   (:import-from utils char-digit reverse-vector sym)
   (:export *min-column* *min-line* *version* *vm*
@@ -15,21 +15,13 @@
 	   source
 	   vm-pop vm-push vm-push-new vm-type))
 
-(in-package lila)
+(in-package snabl)
 
 (define-symbol-macro *version* 1)
 (define-symbol-macro *max-reg-count* 64)
 
 (defvar *vm*)
   
-(defstruct form
-  (pos *default-pos* :type pos))
-
-(defvar *default-form* (make-form :pos *default-pos*))
-
-(defstruct op
-  (form *default-form* :type form))
-
 (defclass vm-type ()
   ((name :initform (error "Missing name") :reader name)
    (val-clone :initform #'identity

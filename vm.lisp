@@ -1,4 +1,4 @@
-(in-package lila)
+(in-package snabl)
 		 
 (defclass vm ()
   ((abc-lib :initform (make-instance 'abc-lib) :reader abc-lib)

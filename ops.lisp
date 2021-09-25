@@ -1,4 +1,7 @@
-(in-package lila)
+(in-package snabl)
+
+(defstruct op
+  (form *default-form* :type form))
 
 ;; branch
 

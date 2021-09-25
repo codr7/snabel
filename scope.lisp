@@ -1,4 +1,4 @@
-(in-package lila)
+(in-package snabl)
 
 (defclass scope ()
   ((parent-scope :initform nil :initarg :parent-scope :reader parent-scope)

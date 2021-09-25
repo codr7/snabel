@@ -1,4 +1,4 @@
-(in-package lila)
+(in-package snabl)
 
 (defclass lib ()
   ((name :initform (error "Missing name") :reader name)

@@ -1,10 +1,10 @@
-(in-package lila)
+(in-package snabl)
 
 (defun repl (&key (in *standard-input*) (out *standard-output*))
   (flet ((fmt (spec &rest args)
            (apply #'format out spec args)
            (finish-output out)))
-    (fmt "lila v~a~%" *version*)
+    (fmt "Snabl v~a~%" *version*)
     (fmt "Press Return twice to evaluate.~%~%")
     (fmt "May the source be with you!~%~%")
 

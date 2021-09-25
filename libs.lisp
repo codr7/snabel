@@ -1,4 +1,4 @@
-(in-package lila)
+(in-package snabl)
 
 (defclass bool-type (vm-type)
   ((name :initform :|Bool|)

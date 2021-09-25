@@ -1,4 +1,4 @@
-(in-package lila)
+(in-package snabl)
 
 (defun lit-tests ()
   (let ((*vm* (new-vm)))
@@ -35,4 +35,3 @@
   (lit-tests)
   (label-tests)
   (branch-tests))
-  

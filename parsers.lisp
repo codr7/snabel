@@ -1,4 +1,4 @@
-(in-package lila)
+(in-package snabl)
 
 (defun parse-ws (in pos)
   (labels ((rec ()

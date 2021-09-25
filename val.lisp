@@ -1,4 +1,4 @@
-(in-package lila)
+(in-package snabl)
 
 (defstruct (val (:conc-name))
   (vm-type (error "Missing type") :type vm-type)

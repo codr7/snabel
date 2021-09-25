@@ -1,14 +1,14 @@
-(asdf:defsystem lila
-  :name "lila"
+(asdf:defsystem snabl
+  :name "snabl"
   :version "1"
   :maintainer "codr7"
   :author "codr7"
-  :description "An embedded, concatenative, interpreted language."
+  :description "An embedded concatenative language."
   :licence "MIT"
   :serial t
   :components ((:file "utils")
+	       (:file "snabl")
 	       (:file "pos")
-	       (:file "lila")
 	       (:file "val")
 	       (:file "lib")
 	       (:file "libs")

@@ -1,4 +1,4 @@
-(in-package lila)
+(in-package snabl)
 
 (define-symbol-macro *min-line* 1)
 (define-symbol-macro *min-column* 0)

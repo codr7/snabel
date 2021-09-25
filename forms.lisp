@@ -1,4 +1,9 @@
-(in-package lila)
+(in-package snabl)
+
+(defstruct form
+  (pos *default-pos* :type pos))
+
+(defvar *default-form* (make-form :pos *default-pos*))
 
 ;; id
 
