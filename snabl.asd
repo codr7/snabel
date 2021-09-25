@@ -9,6 +9,7 @@
   :components ((:file "utils")
 	       (:file "snabl")
 	       (:file "pos")
+	       (:file "type")
 	       (:file "val")
 	       (:file "libs")
 	       (:file "scope")

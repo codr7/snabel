@@ -31,5 +31,5 @@
 	 (reg (with-slots (reg-count) scope
 		(incf reg-count))))
     (assert (< reg *max-reg-count*))
-    (setf (scope-find key) (new-val (reg-type (abc-lib *vm*)) reg))
+    (setf (scope-find key) (new-val (reg-type (abc-lib)) reg))
     reg))

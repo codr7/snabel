@@ -1,7 +1,8 @@
 (in-package snabl)
 		 
 (defclass vm ()
-  ((abc-lib :initform (make-instance 'abc-lib) :reader abc-lib)
+  ((type-count :initform 0)
+   (abc-lib :initform nil :reader abc-lib)
    (code :initform (make-array 0 :element-type 'op :fill-pointer 0) :reader code)
    (main-scope :reader main-scope)
    (scope :initform nil :reader scope)
@@ -11,9 +12,15 @@
 (defun new-vm ()
   (make-instance 'vm))
 
-(defmethod initialize-instance :after ((vm vm) &rest args &key &allow-other-keys)
-  (with-slots (main-scope) vm
-    (setf main-scope (begin-scope :vm vm))))
+(defmethod initialize-instance :after ((self vm) &rest args &key &allow-other-keys)
+  (with-slots (main-scope) self
+    (setf main-scope (begin-scope :vm self))))
+
+(defun abc-lib ()
+  (with-slots (abc-lib) *vm*
+    (unless abc-lib
+      (setf abc-lib (make-instance 'abc-lib)))
+    abc-lib))
 
 (defun emit-op (op)
   (vector-push-extend op (code *vm*)))
@@ -39,6 +46,10 @@
 (defun vm-eval (&key (pc 0))
   (funcall (vm-compile :pc pc)))
 
+(defun next-type-id ()
+  (with-slots (type-count) *vm*
+    (incf type-count)))
+	       
 (defun pc ()
   (length (code *vm*)))
   

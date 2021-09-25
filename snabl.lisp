@@ -19,20 +19,6 @@
 
 (define-symbol-macro *version* 1)
 (define-symbol-macro *max-reg-count* 64)
+(define-symbol-macro *max-type-count* 64)
 
 (defvar *vm*)
-  
-(defclass vm-type ()
-  ((name :initform (error "Missing name") :reader name)
-   (val-clone :initform #'identity
-	      :reader val-clone)
-   (val-dump :initform (lambda (v out)
-			 (print-object v out))
-	     :reader val-dump)
-   (val-is-true? :initform (lambda (v)
-			     (declare (ignore v))
-			     t)
-		 :reader val-is-true?)))
-
-(defmethod print-object ((obj vm-type) out)
-  (write-string (symbol-name (name obj))))

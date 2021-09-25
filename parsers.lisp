@@ -49,7 +49,7 @@
 			 result))
 		   result))))
       (when (rec nil)
-	(new-lit-form (int-type (abc-lib *vm*)) out :pos fpos)))))
+	(new-lit-form (int-type (abc-lib)) out :pos fpos)))))
 
 (defun parse-form (in pos)
   (or (parse-ws in pos)
