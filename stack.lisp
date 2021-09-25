@@ -11,10 +11,11 @@
     (vector-pop (stack *vm*))))
 
 (defun drop (&optional (count 1))
-  (dotimes (i count)
-    (unless (vm-pop)
-      (return-from drop nil)))
-  t)
+  (with-slots (stack) *vm*
+    (let ((len (length stack)))
+      (when (< count len)
+	(decf (fill-pointer stack) count)
+	t))))
      
 (defun dump-stack (&key (out *standard-output*))
   (princ #\[ out)

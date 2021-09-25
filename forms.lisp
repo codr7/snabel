@@ -18,7 +18,7 @@
 	 (ks (symbol-name k))
 	 (v (scope-find k)))
     (cond
-      ((all? ks (lambda (c) (char= c #\D)))
+      ((all? ks (lambda (c) (char= c #\d)))
        (emit-op (new-drop-op (length ks) :form f)))
       ((null v)
        (error "Unknown id: ~a" k))
