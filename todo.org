@@ -20,5 +20,5 @@
 ** shift in parser
 
 (let ((*vm* (new-vm))) 
-  (lib-import (abc-lib *vm*))
+  (lib-import (abc-lib))
   (repl))

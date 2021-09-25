@@ -27,6 +27,18 @@
       (t (emit-op (new-push-op (copy v) :form f)))))
   in)
 
+;; lisp
+
+(defstruct (lisp-form (:include form) (:conc-name lisp-))
+  (expr (error "Missing expr") :type function))
+
+(defun new-lisp-form (expr &key (pos *default-pos*))
+  (make-lisp-form :pos pos :expr expr))
+
+(defmethod emit-form ((f lisp-form) in)
+  (emit-op (new-lisp-op (lisp-expr f) :form f))
+  in)
+
 ;; lit
 
 (defstruct (lit-form (:include form) (:conc-name lit-))

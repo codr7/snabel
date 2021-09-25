@@ -17,6 +17,14 @@
     (rec))
   nil)
 
+(defun parse-prefix (in pc)
+  (let ((c (read-char in nil)))
+    (if (eq c #\$)
+	t
+	(when c
+	  (unread-char c in)
+	  nil))))
+
 (defun parse-id (in pos)
   (let ((fpos pos)
 	(s (with-output-to-string (out)
@@ -50,8 +58,21 @@
 		   result))))
       (when (rec nil)
 	(new-lit-form (int-type (abc-lib)) out :pos fpos)))))
+  
+(defun parse-lisp (in pos)
+  (unless (parse-prefix in #\$)
+    (return-from parse-lisp))
+  
+  (let ((fpos pos)
+	(ipos (file-position in))
+	(f (read in nil)))
+    (unless f
+      (error "Missing Lisp form"))
+    (incf (column pos) (- (file-position in) ipos))
+    (new-lisp-form (eval `(lambda () ,f)) :pos fpos)))
 
 (defun parse-form (in pos)
   (or (parse-ws in pos)
       (parse-int in pos)
+      (parse-lisp in pos)
       (parse-id in pos)))

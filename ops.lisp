@@ -49,6 +49,17 @@
 (defmethod emit-lisp ((op label-op))
   (label-name op))
 
+;; lisp
+
+(defstruct (lisp-op (:include op) (:conc-name lisp-))
+  (expr (error "Missing expr") :type function))
+
+(defun new-lisp-op (expr &key (form *default-form*))
+  (make-lisp-op :form form :expr expr))
+
+(defmethod emit-lisp ((op lisp-op))
+  `(funcall ,(lisp-expr op)))
+
 ;; load
 
 (defstruct (load-op (:include op) (:conc-name load-))
