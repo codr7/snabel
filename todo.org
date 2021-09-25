@@ -1,5 +1,18 @@
-* add store/load ops
+* add prim struct/type
+** call postfix
+** call prims in id emit
+* import abc
+** bind types in lib
+* add store op
+* add refs
+** &foo
+* add cte
+** @(+ 1 2)
 * add call op
-** add vm.calls
-* add lila call parser
+** add frame struct
+** add vm.frames
+* add dot
+** 1.+ 2
+** shift in parser
+* add lila call parser 
 

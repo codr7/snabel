@@ -34,6 +34,17 @@
 (defmethod emit-lisp ((op label-op))
   (label-name op))
 
+;; load
+
+(defstruct (load-op (:include op) (:conc-name load-))
+  (reg (error "Missing reg") :type reg))
+
+(defun new-load-op (reg &key (form *default-form*))
+  (make-load-op :form form :reg reg))
+
+(defmethod emit-lisp ((op load-op))
+  `(aref (regs *vm*) ,(load-reg op)))
+
 ;; push
 
 (defstruct (push-op (:include op) (:conc-name push-))

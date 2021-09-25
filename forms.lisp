@@ -8,8 +8,14 @@
 (defun new-id-form (name &key (pos *default-pos*))
   (make-id-form :pos pos :name name))
 
-(defmethod emit ((f id-form))
-  (error "Not implemented"))
+(defmethod emit-form ((f id-form) in)
+  (let ((v (scope-find (name f))))
+    (cond
+      ((null v)
+       (error "Unknown id: ~a" (name f)))
+      ((eq (vm-type v) (reg-type (abc-lib *vm)))
+       (emit-op (new-load-op (data v))))
+      (t (emit-op (new-push-op (vm-type v) (data v)))))))
 
 ;; lit
 
@@ -19,6 +25,7 @@
 (defun new-lit-form (type data &key (pos *default-pos*))
   (make-lit-form :pos pos :val (new-val type data)))
 
-(defmethod emit ((f lit-form))
+(defmethod emit-form ((f lit-form) in)
   (let ((v (lit-val f)))
-    (emit (new-push-op (vm-type v) (data v) :form f))))
+    (emit-op (new-push-op (vm-type v) (data v) :form f)))
+  in)

@@ -15,8 +15,16 @@
   (with-slots (main-scope) vm
     (setf main-scope (begin-scope :vm vm))))
 
-(defmethod emit ((op op))
+(defun emit-op (op)
   (vector-push-extend op (code *vm*)))
+
+(defun emit-forms (forms)
+  (let ((start-pc (pc)))
+    (labels ((rec (in)
+	       (when in
+		 (rec (emit-form (first in) (rest in))))))
+      (rec (reverse forms))))
+  (reverse-vector (code *vm*) start-pc))
 
 (defun vm-compile (&key (pc 0))
   (let (out)

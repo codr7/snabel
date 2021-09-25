@@ -1,6 +1,6 @@
 (defpackage lila
   (:use cl)
-  (:import-from clvm *vm* column dump-stack emit new-id-form new-pos new-vm line parse-int parse-ws pc vm-eval)
+  (:import-from clvm *vm* column dump-stack emit-forms new-id-form new-pos new-vm line parse-int parse-ws pc vm-eval)
   (:import-from utils kw ws?)
   (:export parse-form parse-id))
 
@@ -33,8 +33,8 @@
   (flet ((fmt (spec &rest args)
            (apply #'format out spec args)
            (finish-output out)))
-    (fmt "lila v~a~%~%" *version*)
-    (fmt "Press Return twice to evaluate forms, Ctrl+C exits.~%")
+    (fmt "lila v~a~%" *version*)
+    (fmt "Press Return twice to evaluate.~%~%")
     (fmt "May the source be with you!~%~%")
 
     (with-output-to-string (buf)
@@ -46,12 +46,12 @@
 			 (let ((fin (make-string-input-stream (get-output-stream-string buf)))
 			       (start-pc (pc))
 			       (pos (new-pos "repl")))
-			   (labels ((get-form ()
+			   (labels ((get-forms (out)
 				      (let ((f (parse-form fin pos)))
-					(when f
-					  (emit f)
-					  (get-form)))))
-			     (get-form))
+					(if f
+					    (get-forms (cons f out))
+					    (nreverse out)))))
+			     (emit-forms (get-forms nil)))
 			   (vm-eval :pc start-pc)
 			   (dump-stack)
 			   (terpri out))

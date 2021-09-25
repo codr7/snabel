@@ -1,6 +1,6 @@
 (defpackage utils
   (:use cl)
-  (:export char-digit kw sym ws?))
+  (:export char-digit kw reverse-vector sym ws?))
 
 (in-package utils)
 
@@ -12,6 +12,12 @@
 	    (dolist (a args)
 	      (princ (if (stringp a) (string-upcase a) a) out)))
 	  :keyword))
+
+(defun reverse-vector (vec &optional (start 0))
+  (dotimes (i (floor (- (length vec) start) 2))
+    (let ((tmp (aref vec (+ start i))))
+      (setf (aref vec (+ start i)) (aref vec (- (length vec) i 1))
+	    (aref vec (- (length vec) i 1)) tmp))))
 
 (defun sym (&rest args)
   (intern (with-output-to-string (out)

@@ -1,10 +1,10 @@
 (defpackage clvm
   (:use cl)
-  (:import-from utils char-digit sym)
+  (:import-from utils char-digit reverse-vector sym)
   (:export *min-column* *min-line* *version* *vm*
 	   abc-lib column
 	   data dump dump-stack
-	   emit eval
+	   emit-form emit-forms emit-op eval
 	   form
 	   id-form int-type
 	   line lit-form

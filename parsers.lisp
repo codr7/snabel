@@ -10,7 +10,7 @@
 		    (setf (column pos) *min-column*)
 		    (rec))
 		   ((#\space #\tab)
-		    (incf (col *pos*))
+		    (incf (column pos))
 		    (rec))
 		   (otherwise
 		    (unread-char c in)))))))
