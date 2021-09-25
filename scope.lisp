@@ -1,4 +1,4 @@
-(in-package clvm)
+(in-package lila)
 
 (defclass scope ()
   ((parent-scope :initform nil :initarg :parent-scope :reader parent-scope)
@@ -18,7 +18,11 @@
   (with-slots (scope) *vm*
     (setf scope (parent-scope scope))))
 
-(defun scope-bind (key val)
+(defun scope-find (key)
+  (with-slots (bindings) (scope *vm*)
+    (gethash key bindings)))
+
+(defun (setf scope-find) (val key)
   (with-slots (bindings) (scope *vm*)
     (setf (gethash key bindings) val)))
 
@@ -27,9 +31,5 @@
 	 (reg (with-slots (reg-count) scope
 		(incf reg-count))))
     (assert (< reg *max-reg-count*))
-    (scope-bind key (new-val (reg-type (abc-lib *vm*)) reg))
+    (setf (scope-find key) (new-val (reg-type (abc-lib *vm*)) reg))
     reg))
-
-(defun scope-find (key)
-  (with-slots (bindings) (scope *vm*)
-    (gethash key bindings)))

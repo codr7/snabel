@@ -1,4 +1,4 @@
-(in-package clvm)
+(in-package lila)
 
 (defstruct (val (:conc-name))
   (vm-type (error "Missing type") :type vm-type)

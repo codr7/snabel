@@ -1,4 +1,4 @@
-(in-package clvm)
+(in-package lila)
 
 (defun lit-tests ()
   (let ((*vm* (new-vm)))

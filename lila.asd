@@ -1,21 +1,22 @@
-(asdf:defsystem clvm
-  :name "clvm"
+(asdf:defsystem lila
+  :name "lila"
   :version "1"
   :maintainer "codr7"
   :author "codr7"
-  :description "A VM toolkit"
+  :description "An embedded, concatenative, interpreted language."
   :licence "MIT"
   :serial t
   :components ((:file "utils")
-	       (:file "clvm")
+	       (:file "pos")
+	       (:file "lila")
 	       (:file "val")
+	       (:file "lib")
 	       (:file "libs")
 	       (:file "scope")
-	       (:file "pos")
 	       (:file "vm")
 	       (:file "forms")
 	       (:file "ops")
 	       (:file "stack")
 	       (:file "parsers")
-	       (:file "lila")
+	       (:file "repl")
 	       (:file "tests")))

@@ -1,4 +1,4 @@
-(in-package clvm)
+(in-package lila)
 
 (defclass bool-type (vm-type)
   ((name :initform :|Bool|)

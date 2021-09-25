@@ -1,4 +1,4 @@
-(in-package clvm)
+(in-package lila)
 
 (defun vm-push (val)
   (vector-push-extend val (stack *vm*)))

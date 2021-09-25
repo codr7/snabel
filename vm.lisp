@@ -1,4 +1,4 @@
-(in-package clvm)
+(in-package lila)
 		 
 (defclass vm ()
   ((abc-lib :initform (make-instance 'abc-lib) :reader abc-lib)

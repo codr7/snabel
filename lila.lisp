@@ -1,60 +1,43 @@
 (defpackage lila
   (:use cl)
-  (:import-from clvm *vm* column dump-stack emit-forms new-id-form new-pos new-vm line parse-int parse-ws pc vm-eval)
-  (:import-from utils kw ws?)
-  (:export parse-form parse-id))
+  (:import-from utils char-digit reverse-vector sym)
+  (:export *min-column* *min-line* *version* *vm*
+	   abc-lib
+	   clone column copy
+	   data dump dump-stack
+	   emit-form emit-forms emit-op eval
+	   form
+	   id-form int-type
+	   line lit-form
+	   new-branch-op new-goto-op new-pos new-push-op new-id-form new-lit-form new-val new-vm
+	   op
+	   parse-int parse-ws pc pos
+	   source
+	   vm-pop vm-push vm-push-new vm-type))
 
 (in-package lila)
 
 (define-symbol-macro *version* 1)
+(define-symbol-macro *max-reg-count* 64)
 
-(defun parse-id (in pos)
-  (let ((fpos pos)
-	(s (with-output-to-string (out)
-	     (labels ((rec ()
-			(let ((c (read-char in nil)))
-			  (when c
-			    (if (ws? c)
-				(unread-char c in)
-				(progn
-				  (incf (column pos))
-				  (write-char c out)
-				  (rec)))))))
-	       (rec)))))
-    (unless (zerop (length s))
-      (new-id-form (kw s) :pos fpos))))
+(defvar *vm*)
+  
+(defstruct form
+  (pos *default-pos* :type pos))
 
-(defun parse-form (in pos)
-  (or (parse-ws in pos)
-      (parse-int in pos)
-      (parse-id in pos)))
+(defvar *default-form* (make-form :pos *default-pos*))
 
-(defun repl (&key (in *standard-input*) (out *standard-output*))
-  (flet ((fmt (spec &rest args)
-           (apply #'format out spec args)
-           (finish-output out)))
-    (fmt "lila v~a~%" *version*)
-    (fmt "Press Return twice to evaluate.~%~%")
-    (fmt "May the source be with you!~%~%")
+(defstruct op
+  (form *default-form* :type form))
 
-    (with-output-to-string (buf)
-      (labels ((get-line ()
-		 (fmt "  ")
-		 (let ((lin (read-line in nil)))
-		   (when lin
-		     (if (string= lin "")
-			 (let ((fin (make-string-input-stream (get-output-stream-string buf)))
-			       (start-pc (pc))
-			       (pos (new-pos "repl")))
-			   (labels ((get-forms (out)
-				      (let ((f (parse-form fin pos)))
-					(if f
-					    (get-forms (cons f out))
-					    (nreverse out)))))
-			     (emit-forms (get-forms nil)))
-			   (vm-eval :pc start-pc)
-			   (dump-stack)
-			   (terpri out))
-			 (write-string lin buf))
-		     (get-line)))))
-	(get-line)))))
+(defclass vm-type ()
+  ((name :initform (error "Missing name") :reader name)
+   (val-clone :initform #'identity
+	      :reader val-clone)
+   (val-dump :initform (lambda (v out)
+			 (print-object v out))
+	     :reader val-dump)
+   (val-is-true? :initform (lambda (v)
+			     (declare (ignore v))
+			     t)
+		 :reader val-is-true?)))
