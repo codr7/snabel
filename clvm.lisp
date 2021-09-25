@@ -1,8 +1,9 @@
 (defpackage clvm
   (:use cl)
-  (:import-from utils sym)
-  (:export *min-column* *min-line* *version*
-	   abc-lib column data
+  (:import-from utils char-digit sym)
+  (:export *min-column* *min-line* *version* *vm*
+	   abc-lib column
+	   data dump dump-stack
 	   emit eval
 	   form
 	   id-form int-type
@@ -53,17 +54,10 @@
 
 (defclass vm-type ()
   ((name :initform (error "Missing name") :reader name)
+   (val-dump :initform (lambda (v out)
+			 (print-object v out))
+	     :reader val-dump)
    (val-is-true? :initform (lambda (v)
 			     (declare (ignore v))
 			     t)
 		 :reader val-is-true?)))
-
-(defstruct (val (:conc-name))
-  (vm-type (error "Missing type") :type vm-type)
-  (data (error "Missing data") :type t))
-
-(defun new-val (vm-type data)
-  (make-val :vm-type vm-type :data data))
-
-(defmethod is-true? ((val val))
-  (funcall (val-is-true? (vm-type val)) (data val)))

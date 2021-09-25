@@ -3,6 +3,7 @@
 (defun parse-ws (in pos)
   (labels ((rec ()
 	     (let ((c (read-char in nil)))
+	       (when c
 		 (case c
 		   (#\newline
 		    (incf (line pos))
@@ -12,11 +13,11 @@
 		    (incf (col *pos*))
 		    (rec))
 		   (otherwise
-		    (unread-char c in))))))
+		    (unread-char c in)))))))
     (rec))
   nil)
 
-(defun parse-int (in vm pos)
+(defun parse-int (in pos)
   (let ((fpos pos)
 	(out 0))
     (labels ((rec (result)
@@ -24,7 +25,7 @@
 		 (if c
 		   (if (digit-char-p c)
 		       (progn
-			 (incf (col *pos*))
+			 (incf (column pos))
 			 (setf out (+ (* out 10) (char-digit c)))
 			 (rec t))
 		       (progn
@@ -32,4 +33,4 @@
 			 result))
 		   result))))
       (when (rec nil)
-	(lit-form (int-type (abc-lib vm)) out :pos fpos)))))
+	(new-lit-form (int-type (abc-lib *vm*)) out :pos fpos)))))

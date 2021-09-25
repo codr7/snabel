@@ -29,7 +29,7 @@
 		,@(nreverse out))))))
 
 (defun vm-eval (&key (pc 0))
-  (funcall (vm-compile :pc 0)))
+  (funcall (vm-compile :pc pc)))
 
 (defun pc ()
   (length (code *vm*)))

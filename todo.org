@@ -1,6 +1,3 @@
-* add (clvm:dump-stack out)
-** add (dump val :out)/type.val-dump
-*** default to print-object
 * add store/load ops
 * add call op
 ** add vm.calls

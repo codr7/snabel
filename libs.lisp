@@ -2,11 +2,11 @@
 
 (defclass bool-type (vm-type)
   ((name :initform :|Bool|)
-   (is-true? :initform (lambda (v) v))))
+   (val-is-true? :initform (lambda (v) v))))
 
 (defclass int-type (vm-type)
   ((name :initform :|Int|)
-   (is-true? :initform (lambda (v) (not (zerop v))))))
+   (val-is-true? :initform (lambda (v) (not (zerop v))))))
 
 (defclass reg-type (vm-type)
   ((name :initform :|Reg|)))

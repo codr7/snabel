@@ -1,8 +1,11 @@
 (defpackage utils
   (:use cl)
-  (:export kw sym ws?))
+  (:export char-digit kw sym ws?))
 
 (in-package utils)
+
+(defun char-digit (c)
+  (- (char-code c) (char-code #\0)))
 
 (defun kw (&rest args)
   (intern (with-output-to-string (out)

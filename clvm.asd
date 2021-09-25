@@ -8,6 +8,7 @@
   :serial t
   :components ((:file "utils")
 	       (:file "clvm")
+	       (:file "val")
 	       (:file "libs")
 	       (:file "scope")
 	       (:file "vm")
