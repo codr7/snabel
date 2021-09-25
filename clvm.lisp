@@ -2,7 +2,8 @@
   (:use cl)
   (:import-from utils char-digit reverse-vector sym)
   (:export *min-column* *min-line* *version* *vm*
-	   abc-lib column
+	   abc-lib
+	   clone column copy
 	   data dump dump-stack
 	   emit-form emit-forms emit-op eval
 	   form
@@ -12,27 +13,14 @@
 	   op
 	   parse-int parse-ws pc pos
 	   source
-	   vm-type))
+	   vm-pop vm-push vm-push-new vm-type))
 
 (in-package clvm)
 
 (define-symbol-macro *version* 1)
 (define-symbol-macro *max-reg-count* 64)
 
-(define-symbol-macro *min-line* 1)
-(define-symbol-macro *min-column* 0)
-
 (defvar *vm*)
-
-(defstruct (pos (:conc-name))
-  (source "n/a" :type string)
-  (line *min-line* :type integer)
-  (column *min-column* :type integer))
-
-(defvar *default-pos* (make-pos))
-
-(defun new-pos (source &optional (line *min-line*) (column *min-column*))
-  (make-pos :source source :line line :column column))
   
 (defstruct form
   (pos *default-pos* :type pos))
@@ -54,6 +42,8 @@
 
 (defclass vm-type ()
   ((name :initform (error "Missing name") :reader name)
+   (val-clone :initform #'identity
+	      :reader val-clone)
    (val-dump :initform (lambda (v out)
 			 (print-object v out))
 	     :reader val-dump)

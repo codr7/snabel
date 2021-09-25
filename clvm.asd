@@ -11,6 +11,7 @@
 	       (:file "val")
 	       (:file "libs")
 	       (:file "scope")
+	       (:file "pos")
 	       (:file "vm")
 	       (:file "forms")
 	       (:file "ops")

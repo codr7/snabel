@@ -50,8 +50,21 @@
 (defstruct (push-op (:include op) (:conc-name push-))
   (val (error "Missing val") :type val))
 
-(defun new-push-op (vm-type data &key (form *default-form*))
-  (make-push-op :form form :val (new-val vm-type data)))
+(defun new-push-op (val &key (form *default-form*))
+  (make-push-op :form form :val val))
 
 (defmethod emit-lisp ((op push-op))
-  `(vm-push ,(vm-type (push-val op)) ,(data (push-val op))))
+  `(vm-push (clone ,(push-val op))))
+
+;; store
+
+(defstruct (store-op (:include op) (:conc-name store-))
+  (reg (error "Missing reg") :type reg)
+  (val nil :type val))
+
+(defun new-store-op (reg &key (form *default-form*) val)
+  (make-store-op :form form :reg reg :val val))
+
+(defmethod emit-lisp ((op store-op))
+  `(setf (aref (regs *vm*) ,(store-reg op))
+	 (or ,(store-val op) (vm-pop))))

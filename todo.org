@@ -1,18 +1,27 @@
-* add prim struct/type
+* add macro struct/type
 ** call postfix
-** call prims in id emit
-* import abc
-** bind types in lib
-* add store op
-* add refs
-** &foo
+** call macros in id emit
+** add if prim
 * add cte
 ** @(+ 1 2)
+** parse as literal form
+* shift macro forms ending in ':'
+** func: foo () -> foo () func
+** use arg-count
+* import abc
+** bind types in lib
+* add refs
+** &foo
+* add group parser
+** ()
+** add ; to parse rest as separate group
 * add call op
 ** add frame struct
 ** add vm.frames
 * add dot
 ** 1.+ 2
 ** shift in parser
-* add lila call parser 
+* add store op
+** optional val
+*** pop if nil
 

@@ -1,7 +1,10 @@
 (in-package clvm)
 
-(defun vm-push (vm-type data)
-  (vector-push-extend (new-val vm-type data) (stack *vm*)))
+(defun vm-push (val)
+  (vector-push-extend val (stack *vm*)))
+
+(defun vm-push-new (vm-type data)
+  (vm-push (new-val vm-type data)))
 
 (defun vm-pop ()
   (unless (zerop (length (stack *vm*)))

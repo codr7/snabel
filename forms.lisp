@@ -15,7 +15,7 @@
        (error "Unknown id: ~a" (name f)))
       ((eq (vm-type v) (reg-type (abc-lib *vm)))
        (emit-op (new-load-op (data v))))
-      (t (emit-op (new-push-op (vm-type v) (data v)))))))
+      (t (emit-op (new-push-op (copy v) :form f))))))
 
 ;; lit
 
@@ -27,5 +27,5 @@
 
 (defmethod emit-form ((f lit-form) in)
   (let ((v (lit-val f)))
-    (emit-op (new-push-op (vm-type v) (data v) :form f)))
+    (emit-op (new-push-op (clone v) :form f)))
   in)

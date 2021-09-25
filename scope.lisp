@@ -18,9 +18,9 @@
   (with-slots (scope) *vm*
     (setf scope (parent-scope scope))))
 
-(defun scope-bind (key vm-type data)
+(defun scope-bind (key val)
   (with-slots (bindings) (scope *vm*)
-    (setf (gethash key bindings) (new-val vm-type data))))
+    (setf (gethash key bindings) val)))
 
 (defun scope-bind-reg (key)
   (let* ((scope (scope *vm*))
