@@ -122,3 +122,17 @@
 
 (defmethod form-emit ((f nop-form) in)
   in)
+
+;; scope
+
+(defstruct (scope-form (:include form) (:conc-name scope-))
+  (body (error "Missing body") :type list))
+
+(defun new-scope-form (body &key (pos *default-pos*))
+  (make-scope-form :pos pos :body body))
+
+(defmethod form-emit ((f scope-form) in)
+  (begin-scope)
+  (emit-forms (scope-body f))
+  (end-scope)
+  in)

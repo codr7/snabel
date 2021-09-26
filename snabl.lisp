@@ -28,6 +28,7 @@
 				 abc-lib))
 
 (define-symbol-macro *code* (with-slots (code) *vm* code))
+(define-symbol-macro *regs* (with-slots (regs) *vm* regs))
 (define-symbol-macro *pc* (with-slots (code) *vm* (length code)))
 (define-symbol-macro *scope* (with-slots (scope) *vm* scope))
 (define-symbol-macro *stack* (with-slots (stack) *vm* stack))

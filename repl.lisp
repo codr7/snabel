@@ -17,13 +17,17 @@
 			 (let ((fin (make-string-input-stream (get-output-stream-string buf)))
 			       (start-pc *pc*)
 			       (pos (new-pos "repl")))
-			   (labels ((get-forms (out)
-				      (let ((f (parse-form fin pos)))
-					(if f
-					    (get-forms (cons f out))
-					    (nreverse out)))))
-			     (emit-forms (get-forms nil)))
-			   (vm-eval :pc start-pc)
+			   (handler-case
+			       (progn
+				 (labels ((get-forms (out)
+					    (let ((f (parse-form fin pos)))
+					      (if f
+						  (get-forms (cons f out))
+						  (nreverse out)))))
+				   (emit-forms (get-forms nil)))
+				 (vm-eval :pc start-pc))
+			     (error (e)
+			       (format t "~a~%" e)))
 			   (dump-stack)
 			   (terpri out))
 			 (write-string lin buf))

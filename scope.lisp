@@ -18,12 +18,15 @@
   (with-slots (scope) *vm*
     (setf scope (parent-scope scope))))
 
-(defun scope-find (key)
-  (with-slots (bindings) *scope*
-    (gethash key bindings)))
+(defun scope-find (key &key (scope *scope*))
+  (with-slots (bindings parent-scope) scope
+    (let ((v (gethash key bindings)))
+      (or v (and parent-scope (scope-find key :scope parent-scope))))))
 
 (defun (setf scope-find) (val key)
   (with-slots (bindings) *scope*
+    (when (gethash key bindings)
+      (error "Dup binding: ~a" key))
     (setf (gethash key bindings) val)))
 
 (defun scope-bind (key val)

@@ -3,17 +3,16 @@
 (defun parse-ws (in pos)
   (labels ((rec ()
 	     (let ((c (read-char in nil)))
-	       (when c
-		 (case c
-		   (#\newline
-		    (incf (line pos))
-		    (setf (column pos) *min-column*)
-		    (rec))
-		   ((#\space #\tab)
-		    (incf (column pos))
-		    (rec))
-		   (otherwise
-		    (unread-char c in)))))))
+	       (cond
+		 ((null c))
+		 ((char= c #\newline)
+		  (incf (line pos))
+		  (setf (column pos) *min-column*)
+		  (rec))
+		 ((or (char= c #\space) (char= c #\tab))
+		  (incf (column pos))
+		  (rec))
+		 (t (unread-char c in))))))
     (rec))
   nil)
 
@@ -40,19 +39,22 @@
   (let ((fpos (clone pos)))
     (unless (parse-prefix in pos #\()
       (return-from parse-group))
-    (let (out)
+    (let (body)
       (labels ((rec ()
 		 (parse-ws in pos)
 		 (let ((c (read-char in nil)))
-		   (when (or (null c) (char= c #\)))
-		     (return-from rec))
-		   (unread-char c in))
+		   (case c
+		     (#\)
+		      (incf (column pos))
+		      (return-from rec))
+		     (nil (error "Open group"))
+		     (otherwise (unread-char c in))))
 		 (let ((f (parse-form in pos)))
 		   (when f
-		     (push f out)
+		     (push f body)
 		     (rec)))))
 	(rec))
-      (new-group-form (nreverse out) :pos fpos))))
+      (new-group-form (nreverse body) :pos fpos))))
 
 (defun parse-id (in pos)
   (let ((fpos (clone pos))
@@ -60,7 +62,10 @@
 	     (labels ((rec ()
 			(let ((c (read-char in nil)))
 			  (when c
-			    (if (or (ws? c) (char= c #\.) (char= c #\() (char= c #\)))
+			    (if (or (ws? c)
+				    (char= c #\.)
+				    (char= c #\() (char= c #\))
+				    (char= c #\{) (char= c #\}))
 				(unread-char c in)
 				(progn
 				  (incf (column pos))
@@ -76,15 +81,15 @@
     (labels ((rec (result)
 	       (let ((c (read-char in nil)))
 		 (if c
-		   (if (digit-char-p c)
-		       (progn
-			 (incf (column pos))
-			 (setf out (+ (* out 10) (char-digit c)))
-			 (rec t))
-		       (progn
-			 (unread-char c in)
-			 result))
-		   result))))
+		     (if (digit-char-p c)
+			 (progn
+			   (incf (column pos))
+			   (setf out (+ (* out 10) (char-digit c)))
+			   (rec t))
+			 (progn
+			   (unread-char c in)
+			   result))
+		     result))))
       (when (rec nil)
 	(new-lit-form (new-val (int-type *abc-lib*) out) :pos fpos)))))
 
@@ -106,21 +111,43 @@
       (return-from parse-nop))
     (new-nop-form :pos fpos)))
 
+(defun parse-scope (in pos)
+  (let ((fpos (clone pos)))
+    (unless (parse-prefix in pos #\{)
+      (return-from parse-scope))
+    (let (body)
+      (labels ((rec ()
+		 (parse-ws in pos)
+		 (let ((c (read-char in nil)))
+		   (cond
+		     ((null c) (error "Open scope"))
+		     ((char= c #\})
+		      (incf (column pos))
+		      (return-from rec))
+		     (t (unread-char c in))))
+		 (let ((f (parse-form in pos)))
+		   (when f
+		     (push f body)
+		     (rec)))))
+	(rec))
+      (new-scope-form (nreverse body) :pos fpos))))
+
 (defun parse-form (in pos)
   (let ((f (or (parse-ws in pos)
 	       (parse-int in pos)
 	       (parse-nop in pos)
 	       (parse-group in pos)
+	       (parse-scope in pos)
 	       (parse-cte in pos)
 	       (parse-lisp in pos)
 	       (parse-id in pos))))
     (when f
       (let ((c (read-char in nil)))
 	(if c
-	  (case c
-	    (#\.
-	     (new-dot-form f :pos (pos f)))
-	    (otherwise
-	     (unread-char c in)
-	     f))
-	  f)))))
+	    (case c
+	      (#\.
+	       (new-dot-form f :pos (pos f)))
+	      (otherwise
+	       (unread-char c in)
+	       f))
+	    f)))))

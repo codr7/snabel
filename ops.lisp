@@ -82,7 +82,7 @@
   (make-load-op :form form :reg reg))
 
 (defmethod emit-lisp ((op load-op))
-  `(vm-push (aref (regs *vm*) ,(load-reg op))))
+  `(vm-push (aref *regs* ,(load-reg op))))
 
 ;; push
 
@@ -105,5 +105,5 @@
   (make-store-op :form form :reg reg :val val))
 
 (defmethod emit-lisp ((op store-op))
-  `(setf (aref (regs *vm*) ,(store-reg op))
+  `(setf (aref *regs* ,(store-reg op))
 	 (or ,(store-val op) (vm-pop))))

@@ -49,15 +49,19 @@ Values are automatically pushed on the stack.
 
 ### bindings
 
-Values may be bound to identifiers using `let`, literals are bound at compile time.
+Values may be bound to identifiers once per scope using `let`, literals are bound at compile time.
 
 ```
-  let foo 42
+  let foo 7
 
+[]
+  let foo 14
+
+Dup binding: foo
 []
   foo
 
-[42]
+[7]
 ```
 
 `_` may be used as a placeholder to get the top value from the stack.
@@ -72,6 +76,17 @@ Values may be bound to identifiers using `let`, literals are bound at compile ti
   foo
 
 [42]
+```
+
+### scopes
+Braces may be used to create child scopes.
+
+```
+  {let foo 42}
+  foo
+
+Unknown id: foo
+[]
 ```
 
 ### groups

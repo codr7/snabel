@@ -1,15 +1,19 @@
-* make scope-find recursive
-* add scope parser
-** {...}
-** add begin-op/end-op
-** readme
+* add if-prim
+* add parse-error/emit-error/eval-error
+** pos + msg
+** grep replace
 * add func
 ** add target type
 *** add target-call method
 * add call op
 ** add frame struct
 ** add vm.frames
+* fib
 * add multi
+* add iters
+** add for prim
 * add refs
 ** &foo
+** require id form
+** push value as is
 
