@@ -13,7 +13,7 @@
 (defun drop (&optional (count 1))
   (with-slots (stack) *vm*
     (let ((len (length stack)))
-      (when (< count len)
+      (when (<= count len)
 	(decf (fill-pointer stack) count)
 	t))))
      

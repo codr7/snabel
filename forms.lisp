@@ -15,16 +15,30 @@
 
 (defmethod emit-form ((f id-form) in)
   (let* ((k (id-name f))
-	 (ks (symbol-name k))
-	 (v (scope-find k)))
+	 (ks (symbol-name k)))
     (cond
       ((all? ks (lambda (c) (char= c #\d)))
        (emit-op (new-drop-op (length ks) :form f)))
-      ((null v)
-       (error "Unknown id: ~a" k))
-      ((eq (vm-type v) (reg-type (abc-lib)))
-       (emit-op (new-load-op (data v) :form f)))
-      (t (emit-op (new-push-op (copy v) :form f)))))
+      ((eq k :!)
+       (let ((f (pop in))
+	     (end-label (gensym)))
+	 (emit-op (new-goto-op end-label :form f))
+	 (let* ((start-pc (pc))
+		(stack (stack *vm*))
+		(prev-len (length stack)))
+	   (emit-form f nil)
+	   (vm-eval :pc start-pc)
+	   (emit-op (new-label-op end-label :form f))
+	   (dovector (v (subseq stack prev-len))
+	     (push (new-lit-form v :pos (form-pos f)) in))
+	   (drop (- (length stack) prev-len)))))
+      (t (let ((v (scope-find k)))
+	   (cond
+	     ((null v)
+	      (error "Unknown id: ~a" k))
+	     ((eq (vm-type v) (reg-type (abc-lib)))
+	      (emit-op (new-load-op (data v) :form f)))
+	     (t (emit-op (new-push-op (copy v) :form f))))))))
   in)
 
 ;; lisp
@@ -44,8 +58,8 @@
 (defstruct (lit-form (:include form) (:conc-name lit-))
   (val (error "Missing val") :type val))
 
-(defun new-lit-form (type data &key (pos *default-pos*))
-  (make-lit-form :pos pos :val (new-val type data)))
+(defun new-lit-form (val &key (pos *default-pos*))
+  (make-lit-form :pos pos :val val))
 
 (defmethod emit-form ((f lit-form) in)
   (let ((v (lit-val f)))

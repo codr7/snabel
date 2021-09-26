@@ -2,7 +2,7 @@
 
 (defun lit-tests ()
   (let ((*vm* (new-vm)))
-    (emit-form (new-lit-form (int-type (abc-lib)) 42) nil)
+    (emit-form (new-lit-form (new-val (int-type (abc-lib)) 42) nil))
     (vm-eval)
     (assert (= (data (vm-pop)) 42))))
 

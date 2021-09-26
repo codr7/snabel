@@ -9,7 +9,7 @@ The language is designed to be easy to customize and embed, and compiles to ordi
 CL> (ql:quickload 'snabl)
 CL> (in-package snabl)
 SNABL> (let ((*vm* (new-vm))) 
-         (lib-import (abc-lib *vm*))
+         (lib-import (abc-lib))
          (repl))
 Snabl v2
 Press Return twice to evaluate.
@@ -46,4 +46,13 @@ Lisp code may be embedded inline by prefixing with `$`.
   1 $(vm-push (new-val (int-type (abc-lib)) 2)) 3
 
 [1 2 3]
+```
+
+### compile time evaluation
+
+Compile time evaluation may be triggered by suffixing any form with `!`.
+
+```
+  42!
+[42]
 ```

@@ -6,7 +6,7 @@
 ;; branch
 
 (defstruct (branch-op (:include op) (:conc-name branch-))
-  (false-label (error "Missing false-label") :type keyword))
+  (false-label (error "Missing false-label") :type symbol))
 
 (defun new-branch-op (false-label &key (form *default-form*))
   (make-branch-op :form form :false-label false-label))
@@ -30,7 +30,7 @@
 ;; goto
 
 (defstruct (goto-op (:include op) (:conc-name goto-))
-  (label (error "Missing label") :type keyword))
+  (label (error "Missing label") :type symbol))
 
 (defun new-goto-op (label &key (form *default-form*))
   (make-goto-op :form form :label label))
@@ -41,7 +41,7 @@
 ;; label
 
 (defstruct (label-op (:include op) (:conc-name label-))
-  (name (error "Missing name") :type keyword))
+  (name (error "Missing name") :type symbol))
 
 (defun new-label-op (name &key (form *default-form*))
   (make-label-op :form form :name name))

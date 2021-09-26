@@ -1,6 +1,6 @@
 (defpackage utils
   (:use cl)
-  (:export all? char-digit dohash kw reverse-vector sym ws?))
+  (:export all? char-digit dohash dovector kw reverse-vector sym ws?))
 
 (in-package utils)
 
@@ -18,6 +18,12 @@
            (declare (ignorable ,key ,val))
            (unless ,ok? (return))
            ,@body)))))
+
+(defmacro dovector ((val vec) &body body)
+  (let ((i (gensym)))
+    `(dotimes (,i (length ,vec))
+       (let ((,val (aref ,vec ,i)))
+	 ,@body))))
 
 (defun kw (&rest args)
   (intern (with-output-to-string (out)

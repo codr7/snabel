@@ -1,6 +1,6 @@
 (defpackage snabl
   (:use cl)
-  (:import-from utils all? char-digit dohash kw reverse-vector sym ws?)
+  (:import-from utils all? char-digit dohash dovector kw reverse-vector sym ws?)
   (:export *min-column* *min-line* *version* *vm*
 	   abc-lib
 	   clone column copy

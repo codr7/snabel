@@ -1,9 +1,10 @@
+* add cte
+** (+ 1 2)!
+** parse as literal forms
+* convert (stack *vm*) to (stack)
 * add prim struct/type
 ** call postfix
 ** call prims in id emit
-* add cte
-** (+ 1 2)!
-** parse as literal form
 * shift macro forms ending in ':'
 ** func: foo () -> foo () func
 ** use arg-count

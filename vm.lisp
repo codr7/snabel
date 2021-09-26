@@ -38,10 +38,10 @@
     (dotimes (i (- (length (code *vm*)) pc))
       (let ((op (aref (code *vm*) (+ pc i))))
 	(push (emit-lisp op) out)))
-    
+
     (eval `(lambda ()
 	     (tagbody
-		,@(nreverse out))))))
+		,@out)))))
 
 (defun vm-eval (&key (pc 0))
   (funcall (vm-compile :pc pc)))
