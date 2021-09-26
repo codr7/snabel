@@ -10,8 +10,19 @@
 ** add vm.frames
 * fib
 * add multi
+* add stack type
+** add stack prim
+** push copy of stack
+** readme
 * add iters
 ** add for prim
+* add vset.lisp
+** based on ordinary vector
+** binary search
+** take compare/key as find args
+** use (replace) to move items
+** add new-set constructor from iter
+*** start empty and insert one at a time
 * add refs
 ** &foo
 ** require id form

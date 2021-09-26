@@ -43,12 +43,12 @@
       (labels ((rec ()
 		 (parse-ws in pos)
 		 (let ((c (read-char in nil)))
-		   (case c
-		     (#\)
+		   (cond
+		     ((null c) (error "Open group"))
+		     ((char= c #\))
 		      (incf (column pos))
 		      (return-from rec))
-		     (nil (error "Open group"))
-		     (otherwise (unread-char c in))))
+		     (t (unread-char c in))))
 		 (let ((f (parse-form in pos)))
 		   (when f
 		     (push f body)
