@@ -1,24 +1,28 @@
-* add cte
-** (+ 1 2)!
-** parse as literal forms
-* convert (stack *vm*) to (stack)
 * add prim struct/type
 ** call postfix
 ** call prims in id emit
+** add cp prim
+*** add copy-op
+**** add vm-copy/vm-peek
+* add group parser
+** ()
+** add ; to parse rest as separate group
+* add compile prim
+** push forms
+** add lisp type
 * shift macro forms ending in ':'
 ** func: foo () -> foo () func
 ** use arg-count
 * add refs
 ** &foo
-* add group parser
-** ()
-** add ; to parse rest as separate group
 * add call op
 ** add frame struct
 ** add vm.frames
 * add dot
 ** 1.+ 2
 ** shift in parser
+* add scope parser
+* {...}
 
 (let ((*vm* (new-vm))) 
   (lib-import (abc-lib))

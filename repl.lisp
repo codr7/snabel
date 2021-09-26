@@ -15,7 +15,7 @@
 		   (when lin
 		     (if (string= lin "")
 			 (let ((fin (make-string-input-stream (get-output-stream-string buf)))
-			       (start-pc (pc))
+			       (start-pc *pc*)
 			       (pos (new-pos "repl")))
 			   (labels ((get-forms (out)
 				      (let ((f (parse-form fin pos)))
