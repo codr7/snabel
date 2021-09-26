@@ -36,13 +36,31 @@
 	(error "Missing CTE form"))
       (new-cte-form expr :pos fpos))))
 
+(defun parse-group (in pos)
+  (let ((fpos (clone pos)))
+    (unless (parse-prefix in pos #\()
+      (return-from parse-group))
+    (let (out)
+      (labels ((rec ()
+		 (parse-ws in pos)
+		 (let ((c (read-char in nil)))
+		   (when (or (null c) (char= c #\)))
+		     (return-from rec))
+		   (unread-char c in))
+		 (let ((f (parse-form in pos)))
+		   (when f
+		     (push f out)
+		     (rec)))))
+	(rec))
+      (new-group-form (nreverse out) :pos fpos))))
+
 (defun parse-id (in pos)
   (let ((fpos (clone pos))
 	(s (with-output-to-string (out)
 	     (labels ((rec ()
 			(let ((c (read-char in nil)))
 			  (when c
-			    (if (ws? c)
+			    (if (or (ws? c) (char= c #\.) (char= c #\() (char= c #\)))
 				(unread-char c in)
 				(progn
 				  (incf (column pos))
@@ -89,9 +107,20 @@
     (new-nop-form :pos fpos)))
 
 (defun parse-form (in pos)
-  (or (parse-ws in pos)
-      (parse-int in pos)
-      (parse-nop in pos)
-      (parse-cte in pos)
-      (parse-lisp in pos)
-      (parse-id in pos)))
+  (let ((f (or (parse-ws in pos)
+	       (parse-int in pos)
+	       (parse-nop in pos)
+	       (parse-group in pos)
+	       (parse-cte in pos)
+	       (parse-lisp in pos)
+	       (parse-id in pos))))
+    (when f
+      (let ((c (read-char in nil)))
+	(if c
+	  (case c
+	    (#\.
+	     (new-dot-form f :pos (pos f)))
+	    (otherwise
+	     (unread-char c in)
+	     f))
+	  f)))))

@@ -30,9 +30,6 @@
     (dotimes (i (- (length (code *vm*)) pc))
       (let ((op (aref (code *vm*) (+ pc i))))
 	(push (emit-lisp op) out)))
-
-    (format t "compile: ~a~%" (reverse out))
-    
     `(tagbody
 	,@(nreverse out))))
 

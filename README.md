@@ -74,6 +74,24 @@ Values may be bound to identifiers using `let`, literals are bound at compile ti
 [42]
 ```
 
+### groups
+Parens may be used to group forms.
+
+```
+  let foo (1 d 2 d 3)
+  foo
+
+[3]
+```
+
+### infix
+
+Infix syntax may be triggered using `.`, the left hand side is shifted to first argument position on form expansion.
+
+```
+  foo.let 42
+```
+
 ### inline Lisp
 
 Lisp code may be embedded inline by prefixing with `$`.

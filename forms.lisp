@@ -1,6 +1,6 @@
 (in-package snabl)
 
-(defstruct form
+(defstruct (form (:conc-name))
   (pos *default-pos* :type pos))
 
 (defvar *default-form* (make-form :pos *default-pos*))
@@ -24,9 +24,36 @@
       (vm-eval :pc start-pc)
       (emit-op (new-label-op end-label :form f))
       (dovector (v (subseq *stack* prev-len))
-	(push (new-lit-form v :pos (form-pos f)) in))
+	(push (new-lit-form v :pos (pos f)) in))
       (drop (- (length *stack*) prev-len))))
   in)
+
+;; dot
+
+(defstruct (dot-form (:include form) (:conc-name dot-))
+  (expr (error "Missing expr") :type form))
+
+(defun new-dot-form (expr &key (pos *default-pos*))
+  (make-dot-form :pos pos :expr expr))
+
+(defmethod form-emit ((f dot-form) in)
+  (let ((rf (pop in)))
+    (unless rf
+      (error "Missing dot form"))
+    (push (dot-expr f) in)
+    (push rf in))
+  in)
+
+;; group
+
+(defstruct (group-form (:include form) (:conc-name group-))
+  (body (error "Missing body") :type list))
+
+(defun new-group-form (body &key (pos *default-pos*))
+  (make-group-form :pos pos :body body))
+
+(defmethod form-emit ((f group-form) in)
+  (append (group-body f) in))
 
 ;; id
 

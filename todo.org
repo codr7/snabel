@@ -1,13 +1,15 @@
-* add if prim
 * make scope-find recursive
-* add refs
-** &foo
+* add scope parser
+** {...}
+** add begin-op/end-op
+** readme
+* add func
+** add target type
+*** add target-call method
 * add call op
 ** add frame struct
 ** add vm.frames
-* add dot
-** 1.+ 2
-** shift in parser
-* add scope parser
-* {...}
+* add multi
+* add refs
+** &foo
 
