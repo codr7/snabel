@@ -1,7 +1,7 @@
 ## Snabl
 
 ### intro
-Snabl is a concatenative language implemented in Common Lisp.<br/>br/>
+Snabl is a concatenative language implemented in Common Lisp.<br/><br/>
 The language is designed to be easy to customize and embed, and compiles to ordinary lambdas manipulating a global VM.
 
 ### setup
