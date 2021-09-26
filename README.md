@@ -1,5 +1,7 @@
 ## Snabl
 
+[![Liberapay](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/andreas7/donate)
+
 ### intro
 Snabl is a scripting language implemented in Common Lisp.<br/>
 <br/>
