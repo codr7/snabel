@@ -82,7 +82,7 @@
 				   (if v
 				       (scope-bind (id-name kf) v)
 				       (progn
-					 (form-emit vf nil)
+					 (setf in (form-emit vf in))
 					 (emit-op (new-store-op (scope-bind-reg (id-name kf)))))))
 				 in))
 

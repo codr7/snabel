@@ -19,25 +19,27 @@
 (defun parse-prefix (in pos pc)
   (let ((c (read-char in nil)))
     (if (eq c pc)
-	(progn
+	(let ((fpos (clone pos)))
 	  (incf (column pos))
-	  t)
+	  fpos)
+	
 	(when c
 	  (unread-char c in)
 	  nil))))
 
 (defun parse-cte (in pos)
-  (let ((fpos (clone pos)))
-    (unless (parse-prefix in pos #\#)
+  (let ((fpos (parse-prefix in pos #\#)))
+    (unless fpos
       (return-from parse-cte))
+
     (let ((expr (parse-form in pos)))
       (unless expr
 	(error "Missing CTE form"))
       (new-cte-form expr :pos fpos))))
 
 (defun parse-group (in pos)
-  (let ((fpos (clone pos)))
-    (unless (parse-prefix in pos #\()
+  (let ((fpos (parse-prefix in pos #\()))
+    (unless fpos
       (return-from parse-group))
     (let (body)
       (labels ((rec ()
@@ -94,8 +96,8 @@
 	(new-lit-form (new-val (int-type *abc-lib*) out) :pos fpos)))))
 
 (defun parse-lisp (in pos)
-  (let ((fpos (clone pos)))
-    (unless (parse-prefix in pos #\$)
+  (let ((fpos (parse-prefix in pos #\$)))
+    (unless fpos
       (return-from parse-lisp))
     
     (let ((ipos (file-position in))
@@ -106,15 +108,17 @@
       (new-lisp-form (eval `(lambda () ,f)) :pos fpos))))
 
 (defun parse-nop (in pos)
-  (let ((fpos (clone pos)))
-    (unless (parse-prefix in pos #\_)
+  (let ((fpos (parse-prefix in pos #\_)))
+    (unless fpos
       (return-from parse-nop))
+
     (new-nop-form :pos fpos)))
 
 (defun parse-scope (in pos)
-  (let ((fpos (clone pos)))
-    (unless (parse-prefix in pos #\{)
+  (let ((fpos (parse-prefix in pos #\{)))
+    (unless fpos
       (return-from parse-scope))
+
     (let (body)
       (labels ((rec ()
 		 (parse-ws in pos)
