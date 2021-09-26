@@ -20,12 +20,10 @@
   (vector-push-extend op (code *vm*)))
 
 (defun emit-forms (forms)
-  (let ((start-pc *pc*))
-    (labels ((rec (in)
-	       (when in
-		 (rec (form-emit (first in) (rest in))))))
-      (rec (reverse forms)))
-    (reverse-vector *code* start-pc)))
+  (labels ((rec (in)
+	     (when in
+	       (rec (form-emit (first in) (rest in))))))
+    (rec forms)))
 
 (defun compile-main (&key (pc 0))  
   (let (out)
@@ -33,6 +31,8 @@
       (let ((op (aref (code *vm*) (+ pc i))))
 	(push (emit-lisp op) out)))
 
+    (format t "compile: ~a~%" (reverse out))
+    
     `(tagbody
 	,@(nreverse out))))
 

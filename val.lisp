@@ -9,7 +9,7 @@
 
 (defun copy (src) (copy-structure src))
 
-(defun clone (src)
+(defmethod clone ((src val))
   (let ((dst (copy src)))
     (setf (data dst) (funcall (val-clone (vm-type src)) (data dst)))
     dst))

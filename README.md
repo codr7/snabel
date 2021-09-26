@@ -1,8 +1,9 @@
 ## Snabl
 
 ### intro
-Snabl is a concatenative language implemented in Common Lisp.<br/><br/>
-The language is designed to be easy to customize and embed, and compiles to ordinary lambdas manipulating a global VM.
+Snabl is a scripting language implemented in Common Lisp.<br/>
+<br/>
+It is designed to be easy to customize and embed, and compiles to ordinary lambdas manipulating a global VM.
 
 ### setup
 ```
@@ -51,7 +52,21 @@ Values are automatically pushed on the stack.
 Values may be bound to identifiers using `let`, literals are bound at compile time.
 
 ```
-  foo 42 let
+  let foo 42
+
+[]
+  foo
+
+[42]
+```
+
+`_` may be used as a placeholder to get the top value from the stack.
+
+```
+  42
+
+[42]
+  let foo _
 
 []
   foo
@@ -71,9 +86,9 @@ Lisp code may be embedded inline by prefixing with `$`.
 
 ### compile time evaluation
 
-Compile time evaluation may be triggered by suffixing any form with `!`.
+Compile time evaluation may be triggered by prefixing any form with `#`.
 
 ```
-  42!
+  #42
 [42]
 ```

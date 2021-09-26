@@ -1,6 +1,4 @@
-* add group parser
-** ()
-** add ; to parse rest as separate group
+* add if prim
 * make scope-find recursive
 * add refs
 ** &foo
@@ -13,6 +11,3 @@
 * add scope parser
 * {...}
 
-(let ((*vm* (new-vm))) 
-  (lib-import (abc-lib))
-  (repl))

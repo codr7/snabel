@@ -11,4 +11,7 @@
 (defun new-pos (source &optional (line *min-line*) (column *min-column*))
   (make-pos :source source :line line :column column))
 
+(defmethod clone ((src pos))
+  (copy-structure src))
+
 (defvar *default-pos* (new-pos "n/a"))

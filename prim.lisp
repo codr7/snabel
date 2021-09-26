@@ -11,7 +11,5 @@
 (defun prim-call (self form in)
   (when (< (length in) (arg-count self))
     (error "Not enough arguments: ~a ~a" self in))
-  (let ((start-pc *pc*)
-	(out (funcall (body self) self form in)))
-    (reverse-vector *code* start-pc)
-    out))
+  (funcall (body self) self form in))
+

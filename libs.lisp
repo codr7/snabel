@@ -76,10 +76,9 @@
 				in))
 
   (lib-bind-prim self :|let| 2 (lambda (self f in)
-				 (let* ((vf (pop in))
-					(v (form-val vf))
-					(kf (pop in))
-				        (reg ))
+				 (let* ((kf (pop in))
+					(vf (pop in))
+					(v (form-val vf)))
 				   (if v
 				       (scope-bind (id-name kf) v)
 				       (progn

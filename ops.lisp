@@ -76,13 +76,13 @@
 ;; load
 
 (defstruct (load-op (:include op) (:conc-name load-))
-  (reg (error "Missing reg") :type reg))
+  (reg (error "Missing reg") :type integer))
 
 (defun new-load-op (reg &key (form *default-form*))
   (make-load-op :form form :reg reg))
 
 (defmethod emit-lisp ((op load-op))
-  `(aref (regs *vm*) ,(load-reg op)))
+  `(vm-push (aref (regs *vm*) ,(load-reg op))))
 
 ;; push
 
@@ -98,8 +98,8 @@
 ;; store
 
 (defstruct (store-op (:include op) (:conc-name store-))
-  (reg (error "Missing reg") :type reg)
-  (val nil :type val))
+  (reg (error "Missing reg") :type integer)
+  (val nil :type t))
 
 (defun new-store-op (reg &key (form *default-form*) val)
   (make-store-op :form form :reg reg :val val))

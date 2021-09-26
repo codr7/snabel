@@ -31,7 +31,7 @@
 
 (defun scope-bind-reg (key)
   (with-slots (reg-count) *scope*
-    (let ((reg (reg-count)))
+    (let ((reg reg-count))
       (assert (< reg *max-reg-count*))
       (incf reg-count)
       (setf (scope-find key) (new-val (reg-type *abc-lib*) reg))

@@ -7,6 +7,27 @@
 
 (defmethod form-val ((f form)))
 
+;; cte
+
+(defstruct (cte-form (:include form) (:conc-name cte-))
+  (expr (error "Missing expr") :type form))
+
+(defun new-cte-form (expr &key (pos *default-pos*))
+  (make-cte-form :pos pos :expr expr))
+
+(defmethod form-emit ((f cte-form) in)
+  (let ((end-label (gensym)))
+    (emit-op (new-goto-op end-label :form f))
+    (let* ((start-pc *pc*)
+	   (prev-len (length *stack*)))
+      (setf in (form-emit (cte-expr f) in))
+      (vm-eval :pc start-pc)
+      (emit-op (new-label-op end-label :form f))
+      (dovector (v (subseq *stack* prev-len))
+	(push (new-lit-form v :pos (form-pos f)) in))
+      (drop (- (length *stack*) prev-len))))
+  in)
+
 ;; id
 
 (defstruct (id-form (:include form) (:conc-name id-))
@@ -21,18 +42,6 @@
     (cond
       ((all? ks (lambda (c) (char= c #\d)))
        (emit-op (new-drop-op (length ks) :form f)))
-      ((eq k :!)
-       (let ((f (pop in))
-	     (end-label (gensym)))
-	 (emit-op (new-goto-op end-label :form f))
-	 (let* ((start-pc *pc*)
-		(prev-len (length *stack*)))
-	   (setf in (form-emit f in))
-	   (vm-eval :pc start-pc)
-	   (emit-op (new-label-op end-label :form f))
-	   (dovector (v (subseq *stack* prev-len))
-	     (push (new-lit-form v :pos (form-pos f)) in))
-	   (drop (- (length *stack*) prev-len)))))
       (t (let ((v (scope-find k)))
 	   (cond
 	     ((null v)
@@ -76,3 +85,13 @@
 
 (defmethod form-val ((f lit-form))
   (lit-val f))
+
+;; nop
+
+(defstruct (nop-form (:include form) (:conc-name nop-)))
+
+(defun new-nop-form (&key (pos *default-pos*))
+  (make-nop-form :pos pos))
+
+(defmethod form-emit ((f nop-form) in)
+  in)
