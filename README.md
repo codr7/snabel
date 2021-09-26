@@ -9,7 +9,7 @@ The language is designed to be easy to customize and embed, and compiles to ordi
 CL> (ql:quickload 'snabl)
 CL> (in-package snabl)
 SNABL> (let ((*vm* (new-vm))) 
-         (lib-import (abc-lib))
+         (lib-import *abc-lib*)
          (repl))
 Snabl v3
 Press Return twice to evaluate.
