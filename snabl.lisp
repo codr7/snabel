@@ -21,4 +21,13 @@
 (define-symbol-macro *max-reg-count* 64)
 (define-symbol-macro *max-type-count* 64)
 
+(define-symbol-macro *abc-lib* (with-slots (abc-lib) *vm*
+				 (unless abc-lib
+				   (setf abc-lib (make-instance 'abc-lib))
+				   (init abc-lib))
+				 abc-lib))
+
+(define-symbol-macro *pc* (with-slots (code) *vm* (length code)))
+(define-symbol-macro *stack* (with-slots (stack) *vm* stack))
+
 (defvar *vm*)

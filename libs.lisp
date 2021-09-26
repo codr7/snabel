@@ -10,6 +10,9 @@
 (defun (setf lib-find) (val lib key)
   (setf (gethash key (bindings lib)) val))
 
+(defun lib-bind (lib key vm-type data)
+  (setf (lib-find lib key) (new-val vm-type data)))
+
 (defun lib-import (lib &rest keys)
   (if keys
       (dolist (k keys)
@@ -20,18 +23,21 @@
       (dohash (k v (bindings lib))
 	(setf (scope-find k) v))))
 
-(defmacro bind-type (lib type parent-types)
+(defmacro lib-bind-type (lib type parent-types)
   `(progn
-     (setf (lib-find ,lib (name (,type ,lib))) (new-val (meta-type ,lib) (,type ,lib)))
+     (lib-bind ,lib (name (,type ,lib)) (meta-type *abc-lib*) (,type ,lib))
      ,@(mapcar (lambda (pt)
 		 `(derive (,type ,lib) (,pt ,lib)))
 	       parent-types)))
+
+(defun lib-bind-prim (lib name arg-count body)
+  (lib-bind lib name (prim-type *abc-lib*) (new-prim name arg-count body)))
 
 ;; abc
 
 (defclass bool-type (vm-type)
   ((name :initform :|Bool|)
-   (val-dump :initform (lambda (v out) (write-string (if v "true" "false") out)))
+   (val-dump :initform (lambda (v out) (write-string (if v "T" "F") out)))
    (val-is-true? :initform (lambda (v) v))))
 
 (defclass int-type (vm-type)
@@ -56,14 +62,18 @@
    (prim-type :initform (make-instance 'prim-type) :reader prim-type)
    (reg-type :initform (make-instance 'reg-type) :reader reg-type)))
 
-(defmethod initialize-instance :after ((lib abc-lib) &rest args &key &allow-other-keys)
+(defmethod init ((self lib))
   (declare (ignore args))
-  (bind-type lib any-type ())
-  (bind-type lib bool-type (any-type))
-  (bind-type lib int-type (any-type))
-  (bind-type lib meta-type (any-type))
-  (bind-type lib prim-type (any-type))
-  (bind-type lib reg-type (any-type))
+  (lib-bind-type self any-type ())
+  (lib-bind-type self bool-type (any-type))
+  (lib-bind-type self int-type (any-type))
+  (lib-bind-type self meta-type (any-type))
+  (lib-bind-type self prim-type (any-type))
+  (lib-bind-type self reg-type (any-type))
+
+  (lib-bind-prim self :|cp| 0 (lambda (self f in)
+				(emit-op (new-copy-op :form f))
+				in))
   
-  (setf (lib-find lib :true) (new-val (bool-type lib) t))
-  (setf (lib-find lib :false) (new-val (bool-type lib) nil)))
+  (lib-bind self :T (bool-type self) t)
+  (lib-bind self :F (bool-type self) nil))

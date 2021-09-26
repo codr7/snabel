@@ -1,15 +1,12 @@
-* add prim struct/type
-** call postfix
-** call prims in id emit
-** add cp prim
-*** add copy-op
-**** add vm-copy/vm-peek
+* add form-val method
+** implement for literal/id
 * add group parser
 ** ()
 ** add ; to parse rest as separate group
 * add compile prim
 ** push forms
-** add lisp type
+** add lisp-type
+* make scope-find recursive
 * shift macro forms ending in ':'
 ** func: foo () -> foo () func
 ** use arg-count

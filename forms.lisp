@@ -35,7 +35,9 @@
 	   (cond
 	     ((null v)
 	      (error "Unknown id: ~a" k))
-	     ((eq (vm-type v) (reg-type (abc-lib)))
+	     ((eq (vm-type v) (prim-type *abc-lib*))
+	      (return-from emit-form (prim-call (data v) f in)))
+	     ((eq (vm-type v) (reg-type *abc-lib*))
 	      (emit-op (new-load-op (data v) :form f)))
 	     (t (emit-op (new-push-op (copy v) :form f))))))))
   in)

@@ -2,13 +2,13 @@
 
 (defun lit-tests ()
   (let ((*vm* (new-vm)))
-    (emit-form (new-lit-form (new-val (int-type (abc-lib)) 42) nil))
+    (emit-form (new-lit-form (new-val (int-type *abc-lib*) 42) nil))
     (vm-eval)
     (assert (= (data (vm-pop)) 42))))
 
 (defun label-tests ()
   (let* ((*vm* (new-vm))
-	 (int (int-type (abc-lib))))
+	 (int (int-type *abc-lib*)))
     (emit-op (new-goto-op :foo))
     (emit-op (new-push-op (new-val int 1)))
     (emit-op (new-label-op :foo))
@@ -19,7 +19,7 @@
 
 (defun branch-tests ()
   (let* ((*vm* (new-vm))
-	 (int (int-type (abc-lib))))
+	 (int (int-type *abc-lib*)))
     (emit-op (new-push-op (new-val int 0)))
     (emit-op (new-branch-op :false))
     (emit-op (new-push-op (new-val int 1)))

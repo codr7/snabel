@@ -38,6 +38,14 @@ Values are automatically pushed on the stack.
 [1 2]
 ```
 
+`cp` may be used to copy the top value.
+
+```
+  1 2 3 cp
+  
+[1 2 3 3]
+```
+
 ### inline Lisp
 
 Lisp code may be embedded inline by prefixing with `$`.

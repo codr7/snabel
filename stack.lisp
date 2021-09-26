@@ -6,6 +6,11 @@
 (defun vm-push-new (vm-type data)
   (vm-push (new-val vm-type data)))
 
+(defun vm-peek ()
+  (let ((n (length *stack*)))
+    (unless (zerop n)
+      (aref *stack* (1- n)))))
+
 (defun vm-pop ()
   (unless (zerop (length *stack*))
     (vector-pop *stack*)))

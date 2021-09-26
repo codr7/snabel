@@ -57,7 +57,7 @@
 			 result))
 		   result))))
       (when (rec nil)
-	(new-lit-form (new-val (int-type (abc-lib)) out) :pos fpos)))))
+	(new-lit-form (new-val (int-type *abc-lib*) out) :pos fpos)))))
   
 (defun parse-lisp (in pos)
   (unless (parse-prefix in #\$)

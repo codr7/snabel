@@ -11,6 +11,7 @@
 	       (:file "pos")
 	       (:file "type")
 	       (:file "val")
+	       (:file "prim")
 	       (:file "libs")
 	       (:file "scope")
 	       (:file "vm")

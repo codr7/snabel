@@ -15,6 +15,19 @@
   `(unless (is-true? (vm-pop))
      (go ,(branch-false-label op))))
 
+;; copy
+
+(defstruct (copy-op (:include op) (:conc-name copy-)))
+
+(defun new-copy-op (&key (form *default-form*))
+  (make-copy-op :form form))
+
+(defmethod emit-lisp ((op copy-op))
+  `(let ((v (vm-peek)))
+     (unless v
+       (error "Stack is empty"))
+     (vm-push v)))
+
 ;; drop
 
 (defstruct (drop-op (:include op) (:conc-name drop-))
