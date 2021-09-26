@@ -23,7 +23,7 @@
   (let ((start-pc *pc*))
     (labels ((rec (in)
 	       (when in
-		 (rec (emit-form (first in) (rest in))))))
+		 (rec (form-emit (first in) (rest in))))))
       (rec (reverse forms)))))
 
 (defun vm-compile (&key (pc 0))

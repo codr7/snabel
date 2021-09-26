@@ -1,5 +1,6 @@
-* add form-val method
-** implement for literal/id
+* shift macro forms ending in ':'
+** func: foo () -> foo () func
+** use arg-count
 * add group parser
 ** ()
 ** add ; to parse rest as separate group
@@ -7,9 +8,6 @@
 ** push forms
 ** add lisp-type
 * make scope-find recursive
-* shift macro forms ending in ':'
-** func: foo () -> foo () func
-** use arg-count
 * add refs
 ** &foo
 * add call op

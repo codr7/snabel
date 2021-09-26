@@ -5,6 +5,8 @@
 
 (defvar *default-form* (make-form :pos *default-pos*))
 
+(defmethod form-val ((f form)))
+
 ;; id
 
 (defstruct (id-form (:include form) (:conc-name id-))
@@ -13,7 +15,7 @@
 (defun new-id-form (name &key (pos *default-pos*))
   (make-id-form :pos pos :name name))
 
-(defmethod emit-form ((f id-form) in)
+(defmethod form-emit ((f id-form) in)
   (let* ((k (id-name f))
 	 (ks (symbol-name k)))
     (cond
@@ -25,7 +27,7 @@
 	 (emit-op (new-goto-op end-label :form f))
 	 (let* ((start-pc *pc*)
 		(prev-len (length *stack*)))
-	   (emit-form f nil)
+	   (form-emit f nil)
 	   (vm-eval :pc start-pc)
 	   (emit-op (new-label-op end-label :form f))
 	   (dovector (v (subseq *stack* prev-len))
@@ -36,11 +38,16 @@
 	     ((null v)
 	      (error "Unknown id: ~a" k))
 	     ((eq (vm-type v) (prim-type *abc-lib*))
-	      (return-from emit-form (prim-call (data v) f in)))
+	      (return-from form-emit (prim-call (data v) f in)))
 	     ((eq (vm-type v) (reg-type *abc-lib*))
 	      (emit-op (new-load-op (data v) :form f)))
 	     (t (emit-op (new-push-op (copy v) :form f))))))))
   in)
+
+(defmethod form-val ((f lit-form))
+  (let ((v (scope-find (id-name f))))
+    (when (and v (not (eq (vm-type v) (reg-type *abc-lib*))))
+      v)))
 
 ;; lisp
 
@@ -50,7 +57,7 @@
 (defun new-lisp-form (expr &key (pos *default-pos*))
   (make-lisp-form :pos pos :expr expr))
 
-(defmethod emit-form ((f lisp-form) in)
+(defmethod form-emit ((f lisp-form) in)
   (emit-op (new-lisp-op (lisp-expr f) :form f))
   in)
 
@@ -62,7 +69,10 @@
 (defun new-lit-form (val &key (pos *default-pos*))
   (make-lit-form :pos pos :val val))
 
-(defmethod emit-form ((f lit-form) in)
+(defmethod form-emit ((f lit-form) in)
   (let ((v (lit-val f)))
     (emit-op (new-push-op (clone v) :form f)))
   in)
+
+(defmethod form-val ((f lit-form))
+  (lit-val f))

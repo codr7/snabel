@@ -46,6 +46,19 @@ Values are automatically pushed on the stack.
 [1 2 3 3]
 ```
 
+### bindings
+
+Values may be bound to identifiers using `let`, literals are bound at compile time.
+
+```
+  foo 42 let
+
+[]
+  foo
+
+[42]
+```
+
 ### inline Lisp
 
 Lisp code may be embedded inline by prefixing with `$`.

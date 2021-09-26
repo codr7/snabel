@@ -26,6 +26,9 @@
   (with-slots (bindings) (scope *vm*)
     (setf (gethash key bindings) val)))
 
+(defun scope-bind (key val)
+  (setf (scope-find key) val))
+
 (defun scope-bind-reg (key)
   (let* ((scope (scope *vm*))
 	 (reg (with-slots (reg-count) scope

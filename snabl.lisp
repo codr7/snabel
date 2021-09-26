@@ -5,8 +5,8 @@
 	   abc-lib
 	   clone column copy
 	   data dump dump-stack
-	   emit-form emit-forms emit-op eval
-	   form
+	   emit-forms emit-op eval
+	   form form-emit
 	   id-form int-type
 	   line lit-form
 	   new-branch-op new-goto-op new-pos new-push-op new-id-form new-lit-form new-val new-vm

@@ -74,6 +74,18 @@
   (lib-bind-prim self :|cp| 0 (lambda (self f in)
 				(emit-op (new-copy-op :form f))
 				in))
-  
+
+  (lib-bind-prim self :|let| 2 (lambda (self f in)
+				 (let* ((vf (pop in))
+					(v (form-val vf))
+					(kf (pop in))
+				        (reg ))
+				   (if v
+				       (scope-bind (id-name kf) v)
+				       (progn
+					 (form-emit vf nil)
+					 (emit-op (new-store-op (scope-bind-reg (id-name kf)))))))
+				 in))
+
   (lib-bind self :T (bool-type self) t)
   (lib-bind self :F (bool-type self) nil))
