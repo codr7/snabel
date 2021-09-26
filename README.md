@@ -1,7 +1,7 @@
 ## Snabl
 
 ### intro
-Snabl is a concatenative language implemented in Common Lisp.<br/>
+Snabl is a concatenative language implemented in Common Lisp.<br/>br/>
 The language is designed to be easy to customize and embed, and compiles to ordinary lambdas manipulating a global VM.
 
 ### setup
@@ -11,7 +11,7 @@ CL> (in-package snabl)
 SNABL> (let ((*vm* (new-vm))) 
          (lib-import (abc-lib))
          (repl))
-Snabl v2
+Snabl v3
 Press Return twice to evaluate.
 May the source be with you!
 
@@ -64,7 +64,7 @@ Values may be bound to identifiers using `let`, literals are bound at compile ti
 Lisp code may be embedded inline by prefixing with `$`.
 
 ```
-  1 $(vm-push (new-val (int-type (abc-lib)) 2)) 3
+  1 $(vm-push (new-val (int-type *abc-lib*) 2)) 3
 
 [1 2 3]
 ```

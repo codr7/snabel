@@ -27,7 +27,7 @@
 	 (emit-op (new-goto-op end-label :form f))
 	 (let* ((start-pc *pc*)
 		(prev-len (length *stack*)))
-	   (form-emit f nil)
+	   (setf in (form-emit f in))
 	   (vm-eval :pc start-pc)
 	   (emit-op (new-label-op end-label :form f))
 	   (dovector (v (subseq *stack* prev-len))

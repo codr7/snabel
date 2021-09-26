@@ -19,3 +19,6 @@
 
 (defmethod dump ((val val) &key (out *standard-output*))
   (funcall (val-dump (vm-type val)) (data val) out))
+
+(defmethod print-object ((self val) out)
+  (dump self :out out))

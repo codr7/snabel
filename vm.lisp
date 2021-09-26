@@ -5,7 +5,7 @@
    (abc-lib :initform nil)
    (code :initform (make-array 0 :element-type 'op :fill-pointer 0) :reader code)
    (main-scope :reader main-scope)
-   (scope :initform nil :reader scope)
+   (scope :initform nil)
    (regs :initform (make-array *max-reg-count* :element-type 'val) :reader regs)
    (stack :initform (make-array 0 :element-type 'val :fill-pointer 0))))
 
@@ -24,17 +24,20 @@
     (labels ((rec (in)
 	       (when in
 		 (rec (form-emit (first in) (rest in))))))
-      (rec (reverse forms)))))
+      (rec (reverse forms)))
+    (reverse-vector *code* start-pc)))
 
-(defun vm-compile (&key (pc 0))
+(defun compile-main (&key (pc 0))  
   (let (out)
     (dotimes (i (- (length (code *vm*)) pc))
       (let ((op (aref (code *vm*) (+ pc i))))
 	(push (emit-lisp op) out)))
-    
-    (eval `(lambda ()
-	     (tagbody
-		,@out)))))
+
+    `(tagbody
+	,@(nreverse out))))
+
+(defun vm-compile (&key (pc 0))
+  (eval `(lambda () ,(compile-main :pc pc))))
 
 (defun vm-eval (&key (pc 0))
   (funcall (vm-compile :pc pc)))
