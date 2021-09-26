@@ -90,6 +90,9 @@ Infix syntax may be triggered using `.`, the left hand side is shifted to first 
 
 ```
   foo.let 42
+  foo
+
+[42]
 ```
 
 ### inline Lisp
@@ -107,6 +110,7 @@ Lisp code may be embedded inline by prefixing with `$`.
 Compile time evaluation may be triggered by prefixing any form with `#`.
 
 ```
-  #42
-[42]
+  #(1 d 2 d 3)
+  
+[3]
 ```
