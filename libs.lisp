@@ -20,12 +20,14 @@
 	  (unless v
 	    (error "Unknown id: ~a" k))
 	  (setf (scope-find k) v)))
+      
       (dohash (k v (bindings lib))
 	(setf (scope-find k) v))))
 
 (defmacro lib-bind-type (lib type parent-types)
   `(progn
      (lib-bind ,lib (name (,type ,lib)) (meta-type *abc-lib*) (,type ,lib))
+     
      ,@(mapcar (lambda (pt)
 		 `(derive (,type ,lib) (,pt ,lib)))
 	       parent-types)))

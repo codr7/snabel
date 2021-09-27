@@ -34,7 +34,7 @@
 
     (let ((expr (parse-form in pos)))
       (unless expr
-	(error "Missing CTE form"))
+	(e-parse pos "Missing CTE form"))
       (new-cte-form expr :pos fpos))))
 
 (defun parse-group (in pos)
@@ -46,7 +46,7 @@
 		 (parse-ws in pos)
 		 (let ((c (read-char in nil)))
 		   (cond
-		     ((null c) (error "Open group"))
+		     ((null c) (e-parse pos "Open group"))
 		     ((char= c #\))
 		      (incf (column pos))
 		      (return-from rec))
@@ -103,7 +103,7 @@
     (let ((ipos (file-position in))
 	  (f (read in nil)))
       (unless f
-	(error "Missing Lisp form"))
+	(e-parse pos "Missing Lisp form"))
       (incf (column pos) (- (file-position in) ipos))
       (new-lisp-form (eval `(lambda () ,f)) :pos fpos))))
 
@@ -124,7 +124,7 @@
 		 (parse-ws in pos)
 		 (let ((c (read-char in nil)))
 		   (cond
-		     ((null c) (error "Open scope"))
+		     ((null c) (e-parse pos "Open scope"))
 		     ((char= c #\})
 		      (incf (column pos))
 		      (return-from rec))

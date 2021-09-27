@@ -15,8 +15,8 @@
 			     t)
 		 :reader val-is-true?)))
 
-(defmethod print-object ((obj vm-type) out)
-  (write-string (symbol-name (name obj)) out))
+(defmethod print-object ((self vm-type) out)
+  (write-string (symbol-name (name self)) out))
 
 (defun derive (child parent)
   (setf (aref (parent-types child) (id parent)) t))

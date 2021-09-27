@@ -59,6 +59,7 @@ Values may be bound to identifiers once per scope using `let`, literals are boun
 []
   let foo 14
 
+Error in 'repl', line 1, column 0:
 Dup binding: foo
 []
   foo
@@ -87,6 +88,7 @@ Braces may be used to create child scopes.
   {let foo 42}
   foo
 
+Error in 'repl', line 1, column 0:
 Unknown id: foo
 []
 ```
@@ -121,7 +123,7 @@ Infix syntax may be triggered using `.`, the left hand side is shifted to first 
 [1]
 ```
 
-All values have a boolean representation; most are unconditionally `T`; but zero, empty stacks and lists etc. are considered `F`.
+All values have a boolean representation; most are unconditionally `T`; but zero, empty stacks and strings etc. are considered `F`.
 
 ```
   if 0 1 2

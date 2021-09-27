@@ -1,6 +1,6 @@
 (in-package snabl)
 
-(defstruct (form (:conc-name))
+(defstruct (form)
   (pos *default-pos* :type pos))
 
 (defvar *default-form* (make-form :pos *default-pos*))
@@ -24,7 +24,7 @@
       (vm-eval :pc start-pc)
       (emit-op (new-label-op end-label :form f))
       (dovector (v (subseq *stack* prev-len))
-	(push (new-lit-form v :pos (pos f)) in))
+	(push (new-lit-form v :pos (form-pos f)) in))
       (drop (- (length *stack*) prev-len))))
   in)
 
@@ -39,7 +39,7 @@
 (defmethod form-emit ((f dot-form) in)
   (let ((rf (pop in)))
     (unless rf
-      (error "Missing dot form"))
+      (e-emit (form-pos f) "Missing dot form"))
     (push (dot-expr f) in)
     (push rf in))
   in)
@@ -72,7 +72,7 @@
       (t (let ((v (scope-find k)))
 	   (cond
 	     ((null v)
-	      (error "Unknown id: ~a" k))
+	      (e-emit (form-pos f) "Unknown id: ~a" k))
 	     ((eq (vm-type v) (prim-type *abc-lib*))
 	      (return-from form-emit (prim-call (data v) f in)))
 	     ((eq (vm-type v) (reg-type *abc-lib*))

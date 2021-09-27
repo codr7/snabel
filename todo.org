@@ -1,12 +1,10 @@
-* add parse-error/emit-error/eval-error
-** pos + msg
-** grep replace
 * add func
 ** add target type
 *** add target-call method
 * add call op
 ** add frame struct
 ** add vm.frames
+* add math lib
 * fib
 * add multi
 * add stack type
@@ -27,5 +25,9 @@
 ** require id form
 ** push value as is
 
+func fibrec [n Int] [Int] { 
+  if n.< 2 n + fibrec n.- 1 fibrec n.- 2 
+}
 
+fibrec 10
 
