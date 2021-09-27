@@ -17,7 +17,7 @@
 
 (in-package snabl)
 
-(define-symbol-macro *version* 3)
+(define-symbol-macro *version* 4)
 (define-symbol-macro *max-reg-count* 64)
 (define-symbol-macro *max-type-count* 64)
 

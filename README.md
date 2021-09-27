@@ -14,7 +14,7 @@ CL> (in-package snabl)
 SNABL> (let ((*vm* (new-vm))) 
          (lib-import *abc-lib*)
          (repl))
-Snabl v3
+Snabl v4
 Press Return twice to evaluate.
 May the source be with you!
 
@@ -110,6 +110,23 @@ Infix syntax may be triggered using `.`, the left hand side is shifted to first 
   foo
 
 [42]
+```
+
+### conditions
+`if` may be used to branch on a condition.
+
+```
+  if T 1 2
+  
+[1]
+```
+
+All values have a boolean representation; most are unconditionally `T`; but zero, empty stacks and lists etc. are considered `F`.
+
+```
+  if 0 1 2
+
+[2]
 ```
 
 ### inline Lisp

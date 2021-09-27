@@ -64,6 +64,7 @@
 
 (defmethod init ((self lib))
   (declare (ignore args))
+
   (lib-bind-type self any-type ())
   (lib-bind-type self bool-type (any-type))
   (lib-bind-type self int-type (any-type))
@@ -73,6 +74,21 @@
 
   (lib-bind-prim self :|cp| 0 (lambda (self f in)
 				(emit-op (new-copy-op :form f))
+				in))
+
+  (lib-bind-prim self :|if| 3 (lambda (self f in)
+				(let ((cnd (pop in))
+				      (t-body (pop in))
+				      (f-body (pop in))
+				      (f-label (gensym))
+				      (end-label (gensym)))
+				  (form-emit cnd nil)
+				  (emit-op (new-branch-op f-label :form f))
+				  (form-emit t-body nil)
+				  (emit-op (new-goto-op end-label :form f))
+				  (emit-op (new-label-op f-label :form f))
+				  (form-emit f-body nil)
+				  (emit-op (new-label-op end-label :form f)))
 				in))
 
   (lib-bind-prim self :|let| 2 (lambda (self f in)
