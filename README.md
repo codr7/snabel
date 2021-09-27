@@ -88,7 +88,7 @@ Braces may be used to create child scopes.
   {let foo 42}
   foo
 
-Error in 'repl', line 1, column 0:
+Error in 'repl', line 2, column 0:
 Unknown id: foo
 []
 ```
