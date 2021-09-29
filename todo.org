@@ -1,7 +1,5 @@
-* add func
-** add target type
-*** add target-call method
 * add call op
+** add target-call method
 ** add frame struct
 ** add vm.frames
 * add math lib

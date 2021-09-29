@@ -5,7 +5,7 @@
 ### intro
 Snabl is a scripting language implemented in Common Lisp.<br/>
 <br/>
-It is designed to be easy to customize and embed, and compiles to ordinary lambdas manipulating a global VM.
+It's designed to be easy to customize and embed, and compiles to ordinary lambdas manipulating a global VM.
 
 ### setup
 ```

@@ -13,6 +13,7 @@
 	       (:file "type")
 	       (:file "val")
 	       (:file "prim")
+	       (:file "func")
 	       (:file "libs")
 	       (:file "scope")
 	       (:file "vm")
