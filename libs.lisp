@@ -108,6 +108,7 @@
 		 ()
 		 (lambda (self pos ret-label)
 		   (dump (vm-pop))
+		   (terpri)
 		   ret-label))
 
   (lib-bind-prim self :|if| 3 (lambda (self f in)

@@ -9,16 +9,16 @@
 (defun new-func (name args rets body)
   (make-instance 'func :name name :args args :rets rets :body body))
 
-(defmethod is-applicable? ((self func))
-  (with-slot (args) self
+(defmethod applicable? ((self func))
+  (with-slots (args) self
     (when (< (length *stack*) (length args))
-      (return-from is-applicable?)))
+      (return-from applicable?))
 
-  (dotimes (i (length args))
-    (let ((parent (aref args (- (length args) i)))
-	  (child (aref *stack* (- (length *stack*) i))))
-      (unless (isa? child parent)
-	(return-from is-applicable?))))
+    (dotimes (i (length args))
+      (let ((parent (rest (aref args (- (length args) i 1))))
+	    (child (vm-type (aref *stack* (- (length *stack*) i 1)))))
+	(unless (isa child parent)
+	  (return-from applicable?)))))
 
   t)
 

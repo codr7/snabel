@@ -73,6 +73,17 @@
 	   (cond
 	     ((null v)
 	      (e-emit (form-pos f) "Unknown id: ~a" k))
+	     ((eq (vm-type v) (func-type *abc-lib*))
+	      (let* ((func (data v))
+		     (args (args func))
+		     (arg-count (length args)))
+		(dotimes (i arg-count)
+		  (unless in
+		    (e-emit (form-pos f) "Missing arg: ~a" (aref args i)))
+		  (setf in (form-emit (pop in) in)))
+		(let ((ret-label (gensym)))
+		  (emit-op (new-call-op func ret-label :form f))
+		  (emit-op (new-label-op ret-label :form f)))))
 	     ((eq (vm-type v) (prim-type *abc-lib*))
 	      (return-from form-emit (prim-call (data v) f in)))
 	     ((eq (vm-type v) (reg-type *abc-lib*))

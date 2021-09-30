@@ -1,7 +1,7 @@
-* add call op
-** add target-call method
+* add vm.frames
 ** add frame struct
-** add vm.frames
+* add call flags
+** add t flag/tailcall
 * add math lib
 * fib
 * add multi

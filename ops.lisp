@@ -15,6 +15,24 @@
   `(unless (is-true? (vm-pop))
      (go ,(branch-false-label op))))
 
+;; call
+
+(defstruct (call-op (:include op) (:conc-name call-))
+  (target nil)
+  (ret-label (error "Missing ret label") :type symbol))
+
+(defun new-call-op (target ret-label &key (form *default-form*))
+  (make-call-op :form form :target target :ret-label ret-label))
+
+(defmethod emit-lisp ((op call-op))
+  (let ((pos (form-pos (call-form op))))
+    `(let ((target (or ,(call-target op) (vm-pop))))
+       (unless target
+	 (e-eval ,pos "Missing call target"))
+       (unless (applicable? target)
+	 (e-eval ,pos "Not applicable: ~a" target))
+       (call target ,pos ',(call-ret-label op)))))
+
 ;; copy
 
 (defstruct (copy-op (:include op) (:conc-name copy-)))

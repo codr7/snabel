@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(defvar *debug* nil)
+
 (defun repl (&key (in *standard-input*) (out *standard-output*))
   (flet ((fmt (spec &rest args)
            (apply #'format out spec args)
@@ -27,6 +29,8 @@
 				   (emit-forms (get-forms nil)))
 				 (vm-eval :pc start-pc))
 			     (error (e)
+			       (when *debug*
+				 (error e))
 			       (format t "~a~%" e)))
 			   (dump-stack)
 			   (terpri out))

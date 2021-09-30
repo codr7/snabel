@@ -150,3 +150,16 @@ Compile time evaluation may be triggered by prefixing any form with `#`.
   
 [3]
 ```
+
+### debugging
+
+`dump` may be used to dump any value to `cl:*standard-output*`.
+
+```
+  dump 42
+
+42
+[]
+```
+
+Setting `snabl:*debug*` to `T` stops the REPL from trapping conditions.
