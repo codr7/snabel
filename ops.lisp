@@ -31,7 +31,7 @@
 	 (e-eval ,pos "Missing call target"))
        (unless (applicable? target)
 	 (e-eval ,pos "Not applicable: ~a" target))
-       (call target ,pos ',(call-ret-label op)))))
+       (call target ,pos))))
 
 ;; copy
 

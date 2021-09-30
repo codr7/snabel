@@ -13,5 +13,5 @@
     (error "Not enough arguments: ~a ~a" self in))
   (funcall (body self) self form in))
 
-(defmethod print-object ((self func) out)
+(defmethod print-object ((self prim) out)
   (format out "Prim(~a ~a)" (symbol-name (name self)) (arg-count self)))

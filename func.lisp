@@ -22,8 +22,8 @@
 
   t)
 
-(defmethod call ((self func) pos ret-label)
-  (funcall (body self) self pos ret-label))
+(defmethod call ((self func) pos)
+  (funcall (body self) self pos))
 
 (defmethod print-object ((self func) out)
   (format out "Func(~a ~a ~a)" (symbol-name (name self)) (args self) (rets self)))

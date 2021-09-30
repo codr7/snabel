@@ -106,10 +106,9 @@
   (lib-bind-func self :|dump|
 		 ((:|value| (any-type *abc-lib*)))
 		 ()
-		 (lambda (self pos ret-label)
+		 (lambda (self pos)
 		   (dump (vm-pop))
-		   (terpri)
-		   ret-label))
+		   (terpri)))
 
   (lib-bind-prim self :|if| 3 (lambda (self f in)
 				(let ((cnd (pop in))

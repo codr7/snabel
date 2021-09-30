@@ -1,7 +1,12 @@
+* add func prim
 * add vm.frames
 ** add frame struct
+** add func-emit
+*** emit as lisp defun with gensym id
+** push pop frame in emitted lisp
+** bind args in emitted lisp
 * add call flags
-** add t flag/tailcall
+** add t flag/tail call
 * add math lib
 * fib
 * add multi
