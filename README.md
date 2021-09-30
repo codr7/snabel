@@ -14,7 +14,7 @@ CL> (in-package snabl)
 SNABL> (let ((*vm* (new-vm))) 
          (lib-import *abc-lib*)
          (repl))
-Snabl v4
+Snabl v5
 Press Return twice to evaluate.
 May the source be with you!
 

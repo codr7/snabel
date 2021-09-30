@@ -3,7 +3,7 @@
   :version "1"
   :maintainer "codr7"
   :author "codr7"
-  :description "An embedded concatenative language."
+  :description "An embedded scripting language"
   :licence "MIT"
   :serial t
   :components ((:file "utils")
@@ -15,6 +15,7 @@
 	       (:file "prim")
 	       (:file "func")
 	       (:file "libs")
+	       (:file "proc")
 	       (:file "scope")
 	       (:file "vm")
 	       (:file "forms")

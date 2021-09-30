@@ -10,12 +10,12 @@
     (when parent-scope
       (setf reg-count (reg-count parent-scope)))))
 
-(defmethod begin-scope (&key (vm *vm*))
-  (with-slots (scope) vm
+(defmethod begin-scope (&key (proc *proc*))
+  (with-slots (scope) proc
     (setf scope (make-instance 'scope :parent-scope scope))))
 
-(defmethod end-scope ()
-  (with-slots (scope) *vm*
+(defmethod end-scope (&key (proc *proc*))
+  (with-slots (scope) proc
     (setf scope (parent-scope scope))))
 
 (defun scope-find (key &key (scope *scope*))

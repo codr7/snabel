@@ -17,7 +17,7 @@
 
 (in-package snabl)
 
-(define-symbol-macro *version* 4)
+(define-symbol-macro *version* 5)
 (define-symbol-macro *max-reg-count* 64)
 (define-symbol-macro *max-type-count* 64)
 
@@ -28,9 +28,10 @@
 				 abc-lib))
 
 (define-symbol-macro *code* (with-slots (code) *vm* code))
-(define-symbol-macro *regs* (with-slots (regs) *vm* regs))
 (define-symbol-macro *pc* (with-slots (code) *vm* (length code)))
-(define-symbol-macro *scope* (with-slots (scope) *vm* scope))
-(define-symbol-macro *stack* (with-slots (stack) *vm* stack))
+(define-symbol-macro *proc* (with-slots (proc-cache) *vm* proc-cache))
+(define-symbol-macro *regs* (with-slots (regs) *proc* regs))
+(define-symbol-macro *scope* (with-slots (scope) *proc* scope))
+(define-symbol-macro *stack* (with-slots (stack) *proc* stack))
 
 (defvar *vm*)

@@ -110,6 +110,17 @@
 		   (dump (vm-pop))
 		   (terpri)))
 
+  (lib-bind-prim self :|func| 4 (lambda (self f in)
+				  (let ((name (pop in))
+					(args (pop in))
+					(rets (pop in))
+					(body (pop in)))
+				    (flet ((parse-args (in) (make-array 0))
+					   (parse-rets (in) (make-array 0)))
+				      (let ((func (new-func (id-name name) (parse-args args) (parse-rets rets) nil)))
+					(func-emit func body in))))
+				  in))
+
   (lib-bind-prim self :|if| 3 (lambda (self f in)
 				(let ((cnd (pop in))
 				      (t-body (pop in))
