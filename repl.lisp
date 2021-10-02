@@ -27,7 +27,7 @@
 						  (get-forms (cons f out))
 						  (nreverse out)))))
 				   (emit-forms (get-forms nil)))
-				 (vm-eval :pc start-pc))
+				 (vm-eval :start-pc start-pc))
 			     (error (e)
 			       (when *debug*
 				 (error e))

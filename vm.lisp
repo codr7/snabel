@@ -20,7 +20,8 @@
     (setf main-scope (begin-scope :proc proc-cache))))
 
 (defun emit-op (op)
-  (vector-push-extend op (code *vm*)))
+  (vector-push-extend op (code *vm*))
+  op)
 
 (defun emit-forms (forms)
   (labels ((rec (in)
@@ -28,22 +29,24 @@
 	       (rec (form-emit (first in) (rest in))))))
     (rec forms)))
 
-(defun compile-main (&key (pc 0))  
+(defun compile-main (&key (start-pc 0) (end-pc (length *code*)))  
   (let (out)
-    (dotimes (i (- (length (code *vm*)) pc))
-      (let ((op (aref (code *vm*) (+ pc i))))
+    (dotimes (i (- end-pc start-pc))
+      (let ((op (aref *code* (+ start-pc i))))
 	(push (emit-lisp op) out)))
+    
     (when *debug*
-      (format t "(TAGBODY~%  ~a)~%" (reverse out)))
+      (princ (reverse out))
+      (terpri))
     
     `(tagbody
 	,@(nreverse out))))
 
-(defun vm-compile (&key (pc 0))
-  (eval `(lambda () ,(compile-main :pc pc))))
+(defun vm-compile (&key (start-pc 0) (end-pc (length *code*)))
+  (eval `(lambda () ,(compile-main :start-pc start-pc :end-pc end-pc))))
 
-(defun vm-eval (&key (pc 0))
-  (funcall (vm-compile :pc pc)))
+(defun vm-eval (&key (start-pc 0))
+  (funcall (vm-compile :start-pc start-pc)))
 
 (defun next-type-id ()
   (with-slots (type-count) *vm*

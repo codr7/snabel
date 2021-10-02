@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(define-symbol-macro time-units-per-ms (/ internal-time-units-per-second 1000))
+
 (defun all? (seq pred)
   (not (find-if-not pred seq)))
 

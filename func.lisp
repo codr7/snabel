@@ -50,7 +50,7 @@
 	       
 	       (setf in (form-emit body-form in))
 	       
-	       (let ((lisp-func (vm-compile :pc start-pc)))
+	       (let ((lisp-func (vm-compile :start-pc start-pc)))
 		 (setf body (lambda (self pos)
 			      (let ((f (new-frame pos self)))
 				(capture f)

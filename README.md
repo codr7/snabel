@@ -200,11 +200,10 @@ SNABL> (let ((*vm* (new-vm))
 	 (lib-import *math-lib*)
          (repl))
   42 d
-  
-(TAGBODY
-  ((VM-PUSH (CLONE 42))
-   (UNLESS (DROP 1)
-     (E-EMIT #S(POS :SOURCE repl :LINE 1 :COLUMN 3) Stack is empty))))
+
+((VM-PUSH (CLONE 42)) (UNLESS (DROP 1)
+                            (E-EMIT #S(POS :SOURCE "repl" :LINE 1 :COLUMN 3)
+                                    "Stack is empty")))
 []
   foo
   

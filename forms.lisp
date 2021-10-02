@@ -27,7 +27,7 @@
     (let* ((start-pc *pc*)
 	   (prev-len (length *stack*)))
       (setf in (form-emit (cte-expr f) in))
-      (vm-eval :pc start-pc)
+      (vm-eval :start-pc start-pc)
       (emit-op (new-label-op end-label :form f))
       (dovector (v (subseq *stack* prev-len))
 	(emit-op (new-push-op v :form f)))

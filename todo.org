@@ -1,4 +1,5 @@
-* add bench prim
+bench 100 fib 20
+
 * add call flags
 ** add d flag/drop
 ** add t flag/tail call
@@ -23,3 +24,10 @@
 ** &foo
 ** require id form
 ** push value as is
+* add struct defs
+** struct.lisp struct-def struct-vsl
+** store as field vector + version
+** add struct prim
+** dot field access
+
+struct pos () (x Int y Int)

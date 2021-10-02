@@ -104,6 +104,21 @@
   (lib-bind-type self reg-type (any-type))
   (lib-bind-type self sym-type (any-type))
 
+  (lib-bind-prim self :|bench| 2 (lambda (self f in)
+				   (let ((reps (pop in)))
+				     (unless (and (eq (type-of reps) 'lit-form)
+						  (eq (vm-type (lit-val reps)) (int-type *abc-lib*)))
+				       (e-emit (pos f) "Invalid reps: ~a" reps))
+				     (let* ((end-label (gensym))
+					    (bench-op (emit-op (new-bench-op (data (lit-val reps))
+									     (1+ *pc*)
+									     end-label
+									     :form f))))
+				       (setf in (form-emit (pop in) in))
+				       (setf (bench-end-pc bench-op) *pc*)
+				       (emit-op (new-label-op end-label :form f))))
+				   in))
+
   (lib-bind-prim self :|cp| 0 (lambda (self f in)
 				(emit-op (new-copy-op :form f))
 				in))

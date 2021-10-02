@@ -3,6 +3,28 @@
 (defstruct op
   (form *default-form* :type form))
 
+;; bench
+
+(defstruct (bench-op (:include op) (:conc-name bench-))
+  (reps (error "Missing reps") :type integer)
+  (start-pc (error "Missing start pc") :type integer)
+  (end-pc nil)
+  (end-label (error "Missing end label") :type symbol))
+
+(defun new-bench-op (reps start-pc end-label &key (form *default-form*))
+  (make-bench-op :form form :reps reps :start-pc start-pc :end-label end-label))
+
+(defmethod emit-lisp ((op bench-op))
+  (let ((imp (vm-compile :start-pc (bench-start-pc op) :end-pc (bench-end-pc op))))
+    `(let ((start-time (get-internal-real-time)))
+       (dotimes (i ,(bench-reps op))
+	 (funcall ,imp))
+     
+       (vm-push (new-val ,(int-type *abc-lib*)
+			 (round (/ (- (get-internal-real-time) start-time)
+				   time-units-per-ms))))
+       (go ,(bench-end-label op)))))
+    
 ;; branch
 
 (defstruct (branch-op (:include op) (:conc-name branch-))
