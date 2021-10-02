@@ -19,36 +19,10 @@ Snabl v6
 Press Return twice to evaluate.
 May the source be with you!
 
-func fib (n Int) (Int) if n.< 2 n + fib n.- 1 fib n.- 2
-fib 10
+  func fib (n Int) (Int) if n.< 2 n + fib n.- 1 fib n.- 2
+  fib 10
 
 [55]
-```
-
-### the stack
-
-Values are automatically pushed on the stack.
-
-```
-  1 2 3
-
-[1 2 3]
-```
-
-`d` may be used to drop values.
-
-```
-  1 2 3 4 5 ddd
-  
-[1 2]
-```
-
-`cp` may be used to copy the top value.
-
-```
-  1 2 3 cp
-  
-[1 2 3 3]
 ```
 
 ### bindings
@@ -141,6 +115,32 @@ New functions may be defined using `func`.
   fib 10
 
 []
+```
+
+### the stack
+
+Values are automatically pushed on the stack.
+
+```
+  1 2 3
+
+[1 2 3]
+```
+
+`d` may be used to drop values.
+
+```
+  1 2 3 4 5 ddd
+  
+[1 2]
+```
+
+`cp` may be used to copy the top value.
+
+```
+  1 2 3 cp
+  
+[1 2 3 3]
 ```
 
 ### inline Lisp
