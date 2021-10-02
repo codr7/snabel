@@ -88,7 +88,7 @@ Infix syntax may be triggered using `.`, the left hand side is shifted to first 
 [42]
 ```
 
-### conditions
+### branching
 `if` may be used to branch on a condition.
 
 ```
