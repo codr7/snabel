@@ -1,4 +1,3 @@
-* rename val-is-true? to val-true?
 * add (pos form) method
 ** replace (form-pos calls)
 * add bench prim

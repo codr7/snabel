@@ -60,8 +60,8 @@
 
 (defclass int-type (vm-type)
   ((name :initform :|Int|)
-   (val-is-true? :initform (lambda (v)
-			     (not (zerop v))))))
+   (val-true? :initform (lambda (v)
+			  (not (zerop v))))))
 
 (defclass meta-type (vm-type)
   ((name :initform :|Meta|)))

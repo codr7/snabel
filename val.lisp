@@ -17,7 +17,7 @@
   (if (eq (vm-type x) (vm-type y))
       (funcall (val-compare (vm-type x)) (data x) (data y))
       (compare (id (vm-type x)) (id (vm-type y)))))
-			  
+
 (defun copy (src) (copy-structure src))
 
 (defmethod clone ((src val))
@@ -25,8 +25,8 @@
     (setf (data dst) (funcall (val-clone (vm-type src)) (data dst)))
     dst))
 
-(defun is-true? (val)
-  (funcall (val-is-true? (vm-type val)) (data val)))
+(defun true? (val)
+  (funcall (val-true? (vm-type val)) (data val)))
 
 (defmethod dump ((val val) &key (out *standard-output*))
   (funcall (val-dump (vm-type val)) (data val) out))

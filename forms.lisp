@@ -10,6 +10,9 @@
 
 (defmethod form-val ((f form)))
 
+(defmethod pos ((self form))
+  (form-pos self))
+
 ;; cte
 
 (defstruct (cte-form (:include form) (:conc-name cte-))

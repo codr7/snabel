@@ -12,9 +12,9 @@
    (val-dump :initform (lambda (v out)
 			 (print-object v out))
 	     :reader val-dump)
-   (val-is-true? :initform (lambda (v)
-			     v)
-		 :reader val-is-true?)))
+   (val-true? :initform (lambda (v)
+			  v)
+	      :reader val-true?)))
 
 (defmethod print-object ((self vm-type) out)
   (write-string (symbol-name (name self)) out))

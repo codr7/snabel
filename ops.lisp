@@ -12,7 +12,7 @@
   (make-branch-op :form form :false-label false-label))
 
 (defmethod emit-lisp ((op branch-op))
-  `(unless (is-true? (vm-pop))
+  `(unless (true? (vm-pop))
      (go ,(branch-false-label op))))
 
 ;; call
