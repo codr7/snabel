@@ -11,9 +11,11 @@
     (unless (zerop n)
       (aref *stack* (1- n)))))
 
-(defun vm-pop ()
-  (unless (zerop (length *stack*))
-    (vector-pop *stack*)))
+(defun vm-pop (&key (offset 0))
+  (when (< offset (length *stack*))
+    (if (zerop offset)
+	(vector-pop *stack*)
+	(delete-at *stack* (- (length *stack*) offset 1)))))
 
 (defun drop (&optional (count 1))
   (let ((len (length *stack*)))

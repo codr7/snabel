@@ -1,23 +1,33 @@
-(defpackage utils
-  (:use cl)
-  (:export all? char-digit dohash dovector kw reverse-vector sym ws?))
-
-(in-package utils)
+(in-package snabl)
 
 (defun all? (seq pred)
   (not (find-if-not pred seq)))
-  
+
 (defun char-digit (c)
   (- (char-code c) (char-code #\0)))
 
+(defun copy-vector (in)
+  (make-array (length in) :initial-contents in :fill-pointer (length in)))
+
+(defun delete-at (seq i)
+  (let ((elt (aref seq i))
+	(slide (subseq seq (1+ i)))
+	(count (1- (fill-pointer seq))))
+    (replace seq slide :start1 i)
+    (adjust-array seq count :fill-pointer count)
+    elt))
+
 (defmacro dohash ((key val tbl) &body body)
-  (let ((i (gensym)) (ok? (gensym)))
+  (let ((i (gensym)) (more? (gensym)) (rec (gensym)))
     `(with-hash-table-iterator (,i ,tbl)
-       (do () (nil)
-         (multiple-value-bind (,ok? ,key ,val) (,i)
-           (declare (ignorable ,key ,val))
-           (unless ,ok? (return))
-           ,@body)))))
+       (labels ((,rec ()
+		  (multiple-value-bind (,more? ,key ,val) (,i)
+		    (when ,more?
+		      (let ()
+			(declare (ignorable ,key ,val))
+			,@body
+			(,rec))))))
+	 (,rec)))))
 
 (defmacro dovector ((val vec) &body body)
   (let ((i (gensym)))

@@ -19,10 +19,9 @@
 	(let ((v (lib-find lib k)))
 	  (unless v
 	    (error "Unknown id: ~a" k))
-	  (setf (scope-find k) v)))
-      
-      (dohash (k v (bindings lib))
-	(setf (scope-find k) v))))
+	  (scope-bind k v)))
+      (dohash (k vv (bindings lib))
+	(scope-bind k vv))))
 
 (defmacro lib-bind-type (lib type parent-types)
   `(progn
@@ -34,7 +33,7 @@
 
 (defmacro lib-bind-func (lib name (&rest args) (&rest rets) body)
   (flet ((parse-arg (arg)
-	   `(cons ,(first arg) ,(second arg))))
+	   `(new-arg ,(first arg) ,(second arg))))
     `(lib-bind ,lib
 	       ,name
 	       (func-type *abc-lib*)
@@ -86,9 +85,7 @@
    (reg-type :initform (make-instance 'reg-type) :reader reg-type)
    (target-type :initform (make-instance 'target-type) :reader target-type)))
 
-(defmethod init ((self lib))
-  (declare (ignore args))
-
+(defmethod init ((self abc-lib))
   (lib-bind-type self any-type ())
   (lib-bind-type self target-type (any-type))
 
@@ -115,24 +112,55 @@
 					(args (pop in))
 					(rets (pop in))
 					(body (pop in)))
-				    (flet ((parse-args (in) (make-array 0))
-					   (parse-rets (in) (make-array 0)))
-				      (let ((func (new-func (id-name name) (parse-args args) (parse-rets rets) nil)))
-					(func-emit func body in))))
-				  in))
+				    (flet ((parse-args (in)
+					     (let* ((arg-count (floor (length (group-body args)) 2))
+						    (out (make-array arg-count :initial-element nil))
+						    (i 0))
+					       (labels ((rec (in)
+							  (when in
+							    (let* ((name (pop in))
+								   (type-name (pop in))
+								   (vm-type (scope-find (id-name type-name))))
+							      (unless vm-type
+								(e-emit (form-pos f) "Unknown type: ~a" type-name))
+							      (setf (aref out i) (new-arg (id-name name) (data vm-type))))
+							    (incf i)
+							    (rec in))))
+						 (rec in))
+					       out))
+					   (parse-rets (in)
+					     (let* ((ret-count (length (group-body rets)))
+						    (out (make-array ret-count :initial-element nil))
+						    (i 0))
+					       (labels ((rec (in)
+							  (when in
+							    (let* ((type-name (pop in))
+								   (vm-type (scope-find (id-name type-name))))
+							      (unless vm-type
+								(e-emit (form-pos f) "Unknown type: ~a" type-name))
+							      (setf (aref out i) (data vm-type)))
+							    (incf i)
+							    (rec in))))
+						 (rec in))
+					       out)))
+				      
+				      (let ((func (new-func (id-name name)
+							    (parse-args (group-body args))
+							    (parse-rets (group-body rets))
+							    nil)))
+					(scope-bind (name func) (new-val (func-type *abc-lib*) func))
+					(func-emit func body in))))))
 
   (lib-bind-prim self :|if| 3 (lambda (self f in)
-				(let ((cnd (pop in))
-				      (t-body (pop in))
-				      (f-body (pop in))
-				      (f-label (gensym))
+				(setf in (form-emit (pop in) in))
+				
+				(let ((f-label (gensym))
 				      (end-label (gensym)))
-				  (form-emit cnd nil)
 				  (emit-op (new-branch-op f-label :form f))
-				  (form-emit t-body nil)
+				  (setf in (form-emit (pop in) in))
 				  (emit-op (new-goto-op end-label :form f))
 				  (emit-op (new-label-op f-label :form f))
-				  (form-emit f-body nil)
+				  (setf in (form-emit (pop in) in))
 				  (emit-op (new-label-op end-label :form f)))
 				in))
 
@@ -149,3 +177,42 @@
 
   (lib-bind self :T (bool-type self) t)
   (lib-bind self :F (bool-type self) nil))
+
+;; math
+
+(defclass math-lib (lib)
+  ((name :initform :math)))
+   
+(defmethod init ((self math-lib))
+  (lib-bind-func self :<
+      ((:|x| (any-type *abc-lib*)) (:|y| (any-type *abc-lib*)))
+      ((bool-type *abc-lib*))
+      (lambda (self pos)
+	(let* ((y (vm-pop)) (x (vm-peek))
+	       (result (compare x y)))
+	  (setf (vm-type x) (bool-type *abc-lib*)
+		(data x) (eq result :lt)))))
+
+  (lib-bind-func self :>
+      ((:|x| (any-type *abc-lib*)) (:|y| (any-type *abc-lib*)))
+      ((bool-type *abc-lib*))
+      (lambda (self pos)
+	(let* ((y (vm-pop)) (x (vm-peek))
+	       (result (compare x y)))
+	  (setf (vm-type x) (bool-type *abc-lib*)
+		(data x) (eq result :gt)))))
+
+  (lib-bind-func self :+
+      ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
+      ((int-type *abc-lib*))
+      (lambda (self pos)
+	(let ((y (vm-pop)) (x (vm-peek)))
+	  (incf (data x) (data y)))))
+
+  (lib-bind-func self :-
+      ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
+      ((int-type *abc-lib*))
+      (lambda (self pos)
+	(let ((y (vm-pop)) (x (vm-peek)))
+	  (decf (data x) (data y))))))
+

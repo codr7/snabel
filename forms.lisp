@@ -41,8 +41,7 @@
     (unless rf
       (e-emit (form-pos f) "Missing dot form"))
     (push (dot-expr f) in)
-    (push rf in))
-  in)
+    (form-emit rf in)))
 
 ;; group
 
@@ -53,7 +52,8 @@
   (make-group-form :pos pos :body body))
 
 (defmethod form-emit ((f group-form) in)
-  (append (group-body f) in))
+  (emit-forms (group-body f))
+  in)
 
 ;; id
 
@@ -81,14 +81,13 @@
 		  (unless in
 		    (e-emit (form-pos f) "Missing arg: ~a" (aref args i)))
 		  (setf in (form-emit (pop in) in)))
-		(let ((ret-label (gensym)))
-		  (emit-op (new-call-op func ret-label :form f))
-		  (emit-op (new-label-op ret-label :form f)))))
+		(emit-op (new-call-op func :form f))))
 	     ((eq (vm-type v) (prim-type *abc-lib*))
-	      (return-from form-emit (prim-call (data v) f in)))
+	      (setf in (prim-call (data v) f in)))
 	     ((eq (vm-type v) (reg-type *abc-lib*))
 	      (emit-op (new-load-op (data v) :form f)))
-	     (t (emit-op (new-push-op (copy v) :form f))))))))
+	     (t
+	      (emit-op (new-push-op v :form f))))))))
   in)
 
 (defmethod form-val ((f lit-form))
@@ -118,7 +117,7 @@
 
 (defmethod form-emit ((f lit-form) in)
   (let ((v (lit-val f)))
-    (emit-op (new-push-op (clone v) :form f)))
+    (emit-op (new-push-op v :form f)))
   in)
 
 (defmethod form-val ((f lit-form))

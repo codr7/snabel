@@ -1,7 +1,7 @@
 (in-package snabl)
 
 (defclass scope ()
-  ((parent-scope :initform nil :initarg :parent-scope :reader parent-scope)
+  ((parent-scope :initform (error "Missing parent-scope") :initarg :parent-scope :reader parent-scope)
    (bindings :initform (make-hash-table) :reader bindings)
    (reg-count :initform 0 :reader reg-count)))
 
@@ -13,6 +13,16 @@
 (defmethod begin-scope (&key (proc *proc*))
   (with-slots (scope) proc
     (setf scope (make-instance 'scope :parent-scope scope))))
+
+(defmacro with-scope ((scope) &body body)
+  (let ((prev (gensym)))
+    `(with-slots (scope) *proc*
+       (let ((,prev scope))
+	 (setf scope ,scope)
+	 
+	 (unwind-protect
+	      (progn ,@body)
+	   (setf scope ,prev))))))
 
 (defmethod end-scope (&key (proc *proc*))
   (with-slots (scope) proc

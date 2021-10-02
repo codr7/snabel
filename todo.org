@@ -1,14 +1,15 @@
-* add func prim
-** add func-emit
-*** emit as lisp defun with gensym id & tagbody
-**** bind named args (alisp)
+* rename val-is-true? to val-true?
+* add (pos form) method
+** replace (form-pos calls)
+* add bench prim
 * add call flags
 ** add d flag/drop
 ** add t flag/tail call
 ** add m flag/memoize
-* add math lib
-* fib
-* add multi
+* add load_op.type
+** copy propagation logic from alisp func
+* parse func rets
+** check in func-lambda
 * add stack type
 ** add stack prim
 ** push copy of stack
@@ -22,14 +23,8 @@
 ** use (replace) to move items
 ** add new-set constructor from iter
 *** start empty and insert one at a time
+* add multi
 * add refs
 ** &foo
 ** require id form
 ** push value as is
-
-func fibrec [n Int] [Int] { 
-  if n.< 2 n + fibrec n.- 1 fibrec n.- 2 
-}
-
-fibrec 10
-

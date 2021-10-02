@@ -7,6 +7,12 @@
 		 :reader parent-types)
    (val-clone :initform #'identity
 	      :reader val-clone)
+   (val-compare :initform (lambda (x y)
+			    (cond
+			      ((< x y) :lt)
+			      ((> x y) :gt)
+			      (t :eq)))
+		:reader val-compare)
    (val-dump :initform (lambda (v out)
 			 (print-object v out))
 	     :reader val-dump)

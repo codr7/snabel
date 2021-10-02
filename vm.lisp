@@ -3,10 +3,13 @@
 (defclass vm (proc)
   ((type-count :initform 0)
    (abc-lib :initform nil)
+   (math-lib :initform nil)
    (code :initform (make-array 0 :element-type 'op :fill-pointer 0) :reader code)
    (main-scope :reader main-scope)
    (procs :initform (make-array 0 :element-type 'proc :fill-pointer 0) :reader procs)
-   (proc-cache :initform nil :reader proc-cache)))
+   (proc-cache :initform nil :reader proc-cache)
+   (frames :initform (make-array 0 :element-type 'frame :fill-pointer 0) :reader frames)
+   (frame-cache :initform nil :reader frame-cache)))
 
 (defun new-vm ()
   (make-instance 'vm))
@@ -30,6 +33,9 @@
     (dotimes (i (- (length (code *vm*)) pc))
       (let ((op (aref (code *vm*) (+ pc i))))
 	(push (emit-lisp op) out)))
+    (when *debug*
+      (format t "(TAGBODY~%  ~a)~%" (reverse out)))
+    
     `(tagbody
 	,@(nreverse out))))
 

@@ -7,6 +7,17 @@
 (defun new-val (vm-type data)
   (make-val :vm-type vm-type :data data))
 
+(defmethod compare (x y)
+  (cond
+    ((< x y) :lt)
+    ((> x y) :gt)
+    (t :eq)))
+
+(defmethod compare ((x val) (y val))
+  (if (eq (vm-type x) (vm-type y))
+      (funcall (val-compare (vm-type x)) (data x) (data y))
+      (compare (id (vm-type x)) (id (vm-type y)))))
+			  
 (defun copy (src) (copy-structure src))
 
 (defmethod clone ((src val))

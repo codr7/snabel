@@ -13,14 +13,16 @@ CL> (ql:quickload 'snabl)
 CL> (in-package snabl)
 SNABL> (let ((*vm* (new-vm))) 
          (lib-import *abc-lib*)
+	 (lib-import *math-lib*)
          (repl))
-Snabl v5
+Snabl v6
 Press Return twice to evaluate.
 May the source be with you!
 
-  42
-  
-[42]
+func fib (n Int) (Int) if n.< 2 n + fib n.- 1 fib n.- 2
+fib 10
+
+[55]
 ```
 
 ### the stack
@@ -131,6 +133,16 @@ All values have a boolean representation; most are unconditionally `T`; but zero
 [2]
 ```
 
+### functions
+New functions may be defined using `func`.
+
+```
+  func fib (n Int) (Int) if n.< 2 n + fib n.- 1 fib n.- 2
+  fib 10
+
+[]
+```
+
 ### inline Lisp
 
 Lisp code may be embedded inline by prefixing with `$`.
@@ -162,4 +174,26 @@ Compile time evaluation may be triggered by prefixing any form with `#`.
 []
 ```
 
-Setting `snabl:*debug*` to `T` stops the REPL from trapping conditions.
+Setting `snabl:*debug*` to `T` prevents the REPL from trapping conditions and dumps generated Lisp code to `stdout`.
+
+```
+SNABL> (let ((*vm* (new-vm))
+             (*debug* t)) 
+         (lib-import *abc-lib*)
+	 (lib-import *math-lib*)
+         (repl))
+Snabl v5
+Press Return twice to evaluate.
+May the source be with you!
+
+  42 d
+  
+(TAGBODY
+  ((VM-PUSH (CLONE 42))
+   (UNLESS (DROP 1)
+     (E-EMIT #S(POS :SOURCE repl :LINE 1 :COLUMN 3) Stack is empty))))
+[]
+  foo
+  
+; Evaluation aborted on #<SNABL::E-EMIT {1004285B63}>.
+```

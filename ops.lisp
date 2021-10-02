@@ -18,11 +18,10 @@
 ;; call
 
 (defstruct (call-op (:include op) (:conc-name call-))
-  (target nil)
-  (ret-label (error "Missing ret label") :type symbol))
+  (target nil))
 
-(defun new-call-op (target ret-label &key (form *default-form*))
-  (make-call-op :form form :target target :ret-label ret-label))
+(defun new-call-op (target &key (form *default-form*))
+  (make-call-op :form form :target target))
 
 (defmethod emit-lisp ((op call-op))
   (let ((pos (form-pos (call-form op))))
@@ -43,8 +42,8 @@
 (defmethod emit-lisp ((op copy-op))
   `(let ((v (vm-peek)))
      (unless v
-       (error "Stack is empty"))
-     (vm-push v)))
+       (e-emit ,(form-pos (op-form op)) "Stack is empty"))
+     (vm-push (copy v))))
 
 ;; drop
 
@@ -56,7 +55,7 @@
 
 (defmethod emit-lisp ((op drop-op))
   `(unless (drop ,(drop-count op))
-     (error "Stack is empty")))
+     (e-emit ,(form-pos (op-form op)) "Stack is empty")))
 
 ;; goto
 
@@ -94,13 +93,14 @@
 ;; load
 
 (defstruct (load-op (:include op) (:conc-name load-))
-  (reg (error "Missing reg") :type integer))
+  (reg (error "Missing reg") :type integer)
+  (vm-type nil))
 
 (defun new-load-op (reg &key (form *default-form*))
   (make-load-op :form form :reg reg))
 
 (defmethod emit-lisp ((op load-op))
-  `(vm-push (aref *regs* ,(load-reg op))))
+  `(vm-push (clone (get-reg ,(load-reg op)))))
 
 ;; push
 
@@ -117,11 +117,13 @@
 
 (defstruct (store-op (:include op) (:conc-name store-))
   (reg (error "Missing reg") :type integer)
-  (val nil :type t))
+  (offset 0)
+  (val nil))
 
-(defun new-store-op (reg &key (form *default-form*) val)
-  (make-store-op :form form :reg reg :val val))
+(defun new-store-op (reg &key (form *default-form*) (offset 0) val)
+  (make-store-op :form form :reg reg :offset offset :val val))
 
 (defmethod emit-lisp ((op store-op))
-  `(setf (aref *regs* ,(store-reg op))
-	 (or ,(store-val op) (vm-pop))))
+  `(setf (get-reg ,(store-reg op))
+	 (or ,(store-val op)
+	     (vm-pop :offset ,(store-offset op)))))

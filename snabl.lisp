@@ -1,6 +1,5 @@
 (defpackage snabl
   (:use cl)
-  (:import-from utils all? char-digit dohash dovector kw reverse-vector sym ws?)
   (:export *min-column* *min-line* *version* *vm*
 	   abc-lib
 	   clone column copy
@@ -17,7 +16,7 @@
 
 (in-package snabl)
 
-(define-symbol-macro *version* 5)
+(define-symbol-macro *version* 6)
 (define-symbol-macro *max-reg-count* 64)
 (define-symbol-macro *max-type-count* 64)
 
@@ -27,7 +26,14 @@
 				   (init abc-lib))
 				 abc-lib))
 
+(define-symbol-macro *math-lib* (with-slots (math-lib) *vm*
+				 (unless math-lib
+				   (setf math-lib (make-instance 'math-lib))
+				   (init math-lib))
+				 math-lib))
+
 (define-symbol-macro *code* (with-slots (code) *vm* code))
+(define-symbol-macro *frame* (with-slots (frame-cache) *vm* frame-cache))
 (define-symbol-macro *pc* (with-slots (code) *vm* (length code)))
 (define-symbol-macro *proc* (with-slots (proc-cache) *vm* proc-cache))
 (define-symbol-macro *regs* (with-slots (regs) *proc* regs))
