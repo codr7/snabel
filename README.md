@@ -38,9 +38,6 @@ Values may be bound to identifiers once per scope using `let`, literals are boun
 Error in 'repl', line 1, column 0:
 Dup binding: foo
 []
-  foo
-
-[7]
 ```
 
 `_` may be used as a placeholder to get the top value from the stack.
