@@ -29,5 +29,3 @@
 ** &foo
 ** require id form
 ** push value as is
-
-  func foo () (Int) (dump 'eval 42)

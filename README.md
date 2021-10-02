@@ -202,10 +202,6 @@ SNABL> (let ((*vm* (new-vm))
          (lib-import *abc-lib*)
 	 (lib-import *math-lib*)
          (repl))
-Snabl v5
-Press Return twice to evaluate.
-May the source be with you!
-
   42 d
   
 (TAGBODY
