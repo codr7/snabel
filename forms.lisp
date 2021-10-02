@@ -31,7 +31,7 @@
       (emit-op (new-label-op end-label :form f))
       (dovector (v (subseq *stack* prev-len))
 	(emit-op (new-push-op v :form f)))
-      ;(form-emit (push (new-lit-form v :pos (form-pos f)) in))
+      ;(form-emit (push (new-lit-form v :pos (pos f)) in))
       (drop (- (length *stack*) prev-len))))
   in)
 
@@ -46,7 +46,7 @@
 (defmethod form-emit ((f dot-form) in)
   (let ((rf (pop in)))
     (unless rf
-      (e-emit (form-pos f) "Missing dot form"))
+      (e-emit (pos f) "Missing dot form"))
     (push (dot-expr f) in)
     (form-emit rf in)))
 
@@ -79,14 +79,14 @@
       (t (let ((v (scope-find k)))
 	   (cond
 	     ((null v)
-	      (e-emit (form-pos f) "Unknown id: ~a" k))
+	      (e-emit (pos f) "Unknown id: ~a" k))
 	     ((eq (vm-type v) (func-type *abc-lib*))
 	      (let* ((func (data v))
 		     (args (args func))
 		     (arg-count (length args)))
 		(dotimes (i arg-count)
 		  (unless in
-		    (e-emit (form-pos f) "Missing arg: ~a" (aref args i)))
+		    (e-emit (pos f) "Missing arg: ~a" (aref args i)))
 		  (setf in (form-emit (pop in) in)))
 		(emit-op (new-call-op func :form f))))
 	     ((eq (vm-type v) (prim-type *abc-lib*))
@@ -98,7 +98,7 @@
   in)
 
 (defmethod form-quote ((f id-form) in)
-  (cons (new-lit-form (new-val (sym-type *abc-lib*) (id-name f)) :pos (form-pos f)) in))
+  (cons (new-lit-form (new-val (sym-type *abc-lib*) (id-name f)) :pos (pos f)) in))
 
 (defmethod form-val ((f lit-form))
   (let ((v (scope-find (id-name f))))

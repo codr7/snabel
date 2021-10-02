@@ -130,7 +130,7 @@
 								   (type-name (pop in))
 								   (vm-type (scope-find (id-name type-name))))
 							      (unless vm-type
-								(e-emit (form-pos f) "Unknown type: ~a" type-name))
+								(e-emit (pos f) "Unknown type: ~a" type-name))
 							      (setf (aref out i) (new-arg (id-name name) (data vm-type))))
 							    (incf i)
 							    (rec in))))
@@ -145,7 +145,7 @@
 							    (let* ((type-name (pop in))
 								   (vm-type (scope-find (id-name type-name))))
 							      (unless vm-type
-								(e-emit (form-pos f) "Unknown type: ~a" type-name))
+								(e-emit (pos f) "Unknown type: ~a" type-name))
 							      (setf (aref out i) (data vm-type)))
 							    (incf i)
 							    (rec in))))

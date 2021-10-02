@@ -1,15 +1,10 @@
-* add (pos form) method
-** replace (form-pos calls)
 * add bench prim
-* --
 * add call flags
 ** add d flag/drop
 ** add t flag/tail call
 ** add m flag/memoize
-* add load_op.type
-** copy propagation logic from alisp func
-* parse func rets
-** check in func-lambda
+* copy load op type propagation logic from alisp func
+* type check func rets
 * add stack type
 ** add stack prim
 ** push copy of stack

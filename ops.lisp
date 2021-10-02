@@ -24,7 +24,7 @@
   (make-call-op :form form :target target))
 
 (defmethod emit-lisp ((op call-op))
-  (let ((pos (form-pos (call-form op))))
+  (let ((pos (pos (call-form op))))
     `(let ((target (or ,(call-target op) (vm-pop))))
        (unless target
 	 (e-eval ,pos "Missing call target"))
@@ -42,7 +42,7 @@
 (defmethod emit-lisp ((op copy-op))
   `(let ((v (vm-peek)))
      (unless v
-       (e-emit ,(form-pos (op-form op)) "Stack is empty"))
+       (e-emit ,(pos (op-form op)) "Stack is empty"))
      (vm-push (copy v))))
 
 ;; drop
@@ -55,7 +55,7 @@
 
 (defmethod emit-lisp ((op drop-op))
   `(unless (drop ,(drop-count op))
-     (e-emit ,(form-pos (op-form op)) "Stack is empty")))
+     (e-emit ,(pos (op-form op)) "Stack is empty")))
 
 ;; goto
 

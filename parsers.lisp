@@ -160,7 +160,7 @@
 	(if c
 	    (case c
 	      (#\.
-	       (new-dot-form f :pos (form-pos f)))
+	       (new-dot-form f :pos (pos f)))
 	      (otherwise
 	       (unread-char c in)
 	       f))
