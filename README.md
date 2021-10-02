@@ -119,11 +119,18 @@ New functions may be defined using `func`.
 ```
 
 ### quoting
-Any expression  may be quoted by prefixing with `'`, most evaluate to themselves.
+Any expression may be quoted by prefixing with `'`.
 
+Literals evaluate to themselves.
 ```
-  'foo '42
-['foo 42]
+  '42
+[42]
+```
+
+Identifiers become symbols.
+```
+  'foo
+['foo]
 ```
 
 ### the stack
