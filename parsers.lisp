@@ -136,12 +136,22 @@
 	(rec))
       (new-scope-form (nreverse body) :pos fpos))))
 
+(defun parse-quote (in pos)
+  (let ((fpos (parse-prefix in pos #\')))
+    (unless fpos
+      (return-from parse-quote))
+    (let ((f (parse-form in pos)))
+      (unless f
+	(e-parse pos "Missing quoted expression"))
+      (new-quote-form f :pos fpos))))
+
 (defun parse-form (in pos)
   (let ((f (or (parse-ws in pos)
 	       (parse-int in pos)
 	       (parse-nop in pos)
 	       (parse-group in pos)
 	       (parse-scope in pos)
+	       (parse-quote in pos)
 	       (parse-cte in pos)
 	       (parse-lisp in pos)
 	       (parse-id in pos))))

@@ -30,10 +30,10 @@ May the source be with you!
 Values may be bound to identifiers once per scope using `let`, literals are bound at compile time.
 
 ```
-  let foo 7
+  let foo 42
 
 []
-  let foo 14
+  let foo 42
 
 Error in 'repl', line 1, column 0:
 Dup binding: foo
@@ -73,10 +73,11 @@ Unknown id: foo
 Parens may be used to group forms.
 
 ```
-  let foo (1 d 2 d 3)
+  let foo (dump 'binding 42)
   foo
 
-[3]
+'binding
+[42]
 ```
 
 ### infix
@@ -94,17 +95,17 @@ Infix syntax may be triggered using `.`, the left hand side is shifted to first 
 `if` may be used to branch on a condition.
 
 ```
-  if T 1 2
+  if T 'yes 'no
   
-[1]
+['yes]
 ```
 
 All values have a boolean representation; most are unconditionally `T`; but zero, empty stacks and strings etc. are considered `F`.
 
 ```
-  if 0 1 2
+  if 0 'yes 'no
 
-[2]
+['no]
 ```
 
 ### functions
@@ -114,7 +115,15 @@ New functions may be defined using `func`.
   func fib (n Int) (Int) if n.< 2 n + fib n.- 1 fib n.- 2
   fib 10
 
-[]
+[55]
+```
+
+### quoting
+Any expression  may be quoted by prefixing with `'`, most evaluate to themselves.
+
+```
+  'foo '42
+['foo 42]
 ```
 
 ### the stack
@@ -158,9 +167,13 @@ Lisp code may be embedded inline by prefixing with `$`.
 Compile time evaluation may be triggered by prefixing any form with `#`.
 
 ```
-  #(1 d 2 d 3)
-  
-[3]
+  func foo () (Int) #(dump 'eval 42)
+
+'eval
+[]
+  foo
+
+[42]
 ```
 
 ### debugging

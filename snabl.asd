@@ -8,6 +8,7 @@
   :serial t
   :components ((:file "snabl")
 	       (:file "utils")
+	       (:file "order")
 	       (:file "pos")
 	       (:file "errors")
 	       (:file "type")

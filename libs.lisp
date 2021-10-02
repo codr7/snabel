@@ -41,7 +41,7 @@
 			 (make-array ,(length args) :initial-contents (list ,@(mapcar #'parse-arg args)))
 			 (make-array ,(length rets) :initial-contents (list ,@rets))
 			 ,body))))
-  
+
 (defun lib-bind-prim (lib name arg-count body)
   (lib-bind lib name (prim-type *abc-lib*) (new-prim name arg-count body)))
 
@@ -52,15 +52,16 @@
 
 (defclass bool-type (vm-type)
   ((name :initform :|Bool|)
-   (val-dump :initform (lambda (v out) (write-string (if v "T" "F") out)))
-   (val-is-true? :initform (lambda (v) v))))
+   (val-dump :initform (lambda (v out)
+			 (write-char (if v #\T #\F) out)))))
 
 (defclass func-type (vm-type)
   ((name :initform :|Func|)))
 
 (defclass int-type (vm-type)
   ((name :initform :|Int|)
-   (val-is-true? :initform (lambda (v) (not (zerop v))))))
+   (val-is-true? :initform (lambda (v)
+			     (not (zerop v))))))
 
 (defclass meta-type (vm-type)
   ((name :initform :|Meta|)))
@@ -70,6 +71,11 @@
 
 (defclass reg-type (vm-type)
   ((name :initform :|Reg|)))
+
+(defclass sym-type (vm-type)
+  ((name :initform :|Sym|)
+   (val-dump :initform (lambda (v out)
+			 (format out "'~a" (symbol-name v))))))
 
 (defclass target-type (vm-type)
   ((name :initform :|Target|)))
@@ -83,6 +89,7 @@
    (meta-type :initform (make-instance 'meta-type) :reader meta-type)
    (prim-type :initform (make-instance 'prim-type) :reader prim-type)
    (reg-type :initform (make-instance 'reg-type) :reader reg-type)
+   (sym-type :initform (make-instance 'sym-type) :reader sym-type)
    (target-type :initform (make-instance 'target-type) :reader target-type)))
 
 (defmethod init ((self abc-lib))
@@ -95,17 +102,18 @@
   (lib-bind-type self meta-type (any-type))
   (lib-bind-type self prim-type (any-type target-type))
   (lib-bind-type self reg-type (any-type))
+  (lib-bind-type self sym-type (any-type))
 
   (lib-bind-prim self :|cp| 0 (lambda (self f in)
 				(emit-op (new-copy-op :form f))
 				in))
 
   (lib-bind-func self :|dump|
-		 ((:|value| (any-type *abc-lib*)))
-		 ()
-		 (lambda (self pos)
-		   (dump (vm-pop))
-		   (terpri)))
+      ((:|value| (any-type *abc-lib*)))
+      ()
+      (lambda (self pos)
+	(dump (vm-pop))
+	(terpri)))
 
   (lib-bind-prim self :|func| 4 (lambda (self f in)
 				  (let ((name (pop in))
@@ -182,7 +190,7 @@
 
 (defclass math-lib (lib)
   ((name :initform :math)))
-   
+
 (defmethod init ((self math-lib))
   (lib-bind-func self :<
       ((:|x| (any-type *abc-lib*)) (:|y| (any-type *abc-lib*)))

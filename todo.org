@@ -2,6 +2,7 @@
 * add (pos form) method
 ** replace (form-pos calls)
 * add bench prim
+* --
 * add call flags
 ** add d flag/drop
 ** add t flag/tail call
@@ -28,3 +29,5 @@
 ** &foo
 ** require id form
 ** push value as is
+
+  func foo () (Int) (dump 'eval 42)

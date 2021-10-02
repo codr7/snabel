@@ -5,6 +5,9 @@
 
 (defvar *default-form* (make-form :pos *default-pos*))
 
+(defmethod form-quote ((f form) in)
+  (cons f in))
+
 (defmethod form-val ((f form)))
 
 ;; cte
@@ -24,7 +27,8 @@
       (vm-eval :pc start-pc)
       (emit-op (new-label-op end-label :form f))
       (dovector (v (subseq *stack* prev-len))
-	(push (new-lit-form v :pos (form-pos f)) in))
+	(emit-op (new-push-op v :form f)))
+      ;(form-emit (push (new-lit-form v :pos (form-pos f)) in))
       (drop (- (length *stack*) prev-len))))
   in)
 
@@ -90,6 +94,9 @@
 	      (emit-op (new-push-op v :form f))))))))
   in)
 
+(defmethod form-quote ((f id-form) in)
+  (cons (new-lit-form (new-val (sym-type *abc-lib*) (id-name f)) :pos (form-pos f)) in))
+
 (defmethod form-val ((f lit-form))
   (let ((v (scope-find (id-name f))))
     (when (and v (not (eq (vm-type v) (reg-type *abc-lib*))))
@@ -132,6 +139,18 @@
 
 (defmethod form-emit ((f nop-form) in)
   in)
+
+;; quote
+
+(defstruct (quote-form (:include form) (:conc-name quote-))
+  (expr (error "Missing expr") :type form))
+
+(defun new-quote-form (expr &key (pos *default-pos*))
+  (make-quote-form :pos pos :expr expr))
+
+(defmethod form-emit ((f quote-form) in)
+  (setf in (form-quote (quote-expr f) in))
+  (form-emit (pop in) in))
 
 ;; scope
 
