@@ -34,13 +34,15 @@
 (defmacro lib-bind-func (lib name (&rest args) (&rest rets) body)
   (flet ((parse-arg (arg)
 	   `(new-arg ,(first arg) ,(second arg))))
-    `(lib-bind ,lib
-	       ,name
-	       (func-type *abc-lib*)
-	       (new-func ,name
-			 (make-array ,(length args) :initial-contents (list ,@(mapcar #'parse-arg args)))
-			 (make-array ,(length rets) :initial-contents (list ,@rets))
-			 ,body))))
+    `(let ((f (new-func ,name
+			(make-array ,(length args) :initial-contents (list ,@(mapcar #'parse-arg args)))
+			(make-array ,(length rets) :initial-contents (list ,@rets))
+			,body)))
+       (lib-bind ,lib
+		 ,name
+		 (func-type *abc-lib*)
+		 f)
+       f)))
 
 (defun lib-bind-prim (lib name arg-count body)
   (lib-bind lib name (prim-type *abc-lib*) (new-prim name arg-count body)))
@@ -60,6 +62,8 @@
 
 (defclass int-type (vm-type)
   ((name :initform :|Int|)
+   (val-is :initform (lambda (x y)
+		       (= x y)))
    (val-true? :initform (lambda (v)
 			  (not (zerop v))))))
 
@@ -187,6 +191,20 @@
 				  (emit-op (new-label-op end-label :form f)))
 				in))
 
+  (lib-bind-prim self :|is| 2 (lambda (self f in)
+				(let* ((x (pop in))
+				       (xv (form-val x)))
+				  (unless xv
+				    (form-emit x in))
+				  (let* ((y (pop in))
+					 (yv (form-val y)))
+				    (unless yv
+				      (form-emit y in))
+				    (if (and xv yv)
+					(emit-op (new-push-op (new-val (bool-type *abc-lib*) (is xv yv))))
+					(emit-op (new-is-op xv yv :form f)))))
+				in))
+
   (lib-bind-prim self :|let| 2 (lambda (self f in)
 				 (let* ((kf (pop in))
 					(vf (pop in))
@@ -204,7 +222,9 @@
 ;; math
 
 (defclass math-lib (lib)
-  ((name :initform :math)))
+  ((name :initform :math)
+   (int-add-func :reader int-add-func)
+   (int-sub-func :reader int-sub-func)))
 
 (defmethod init ((self math-lib))
   (lib-bind-func self :<
@@ -225,17 +245,21 @@
 	  (setf (vm-type x) (bool-type *abc-lib*)
 		(data x) (eq result :gt)))))
 
-  (lib-bind-func self :+
-      ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
-      ((int-type *abc-lib*))
-      (lambda (self pos &key drop-rets?)
-	(let ((y (vm-pop)) (x (vm-peek)))
-	  (incf (data x) (data y)))))
-
-  (lib-bind-func self :-
-      ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
-      ((int-type *abc-lib*))
-      (lambda (self pos &key drop-rets?)
-	(let ((y (vm-pop)) (x (vm-peek)))
-	  (decf (data x) (data y))))))
+  (setf (slot-value self 'int-add-func)
+	(lib-bind-func self :+
+	    ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
+	    ((int-type *abc-lib*))
+	    (lambda (self pos &key drop-rets?)
+	      (let ((y (vm-pop)) (x (vm-peek)))
+		(e-eval pos "Use inc op")))))
+		;;(incf (data x) (data y))))))
+  
+  (setf (slot-value self 'int-sub-func)
+	(lib-bind-func self :-
+	    ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
+	    ((int-type *abc-lib*))
+	    (lambda (self pos &key drop-rets?)
+	      (let ((y (vm-pop)) (x (vm-peek)))
+		(e-eval pos "Use dec op"))))))
+		;;(decf (data x) (data y)))))))
 

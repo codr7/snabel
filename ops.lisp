@@ -47,7 +47,13 @@
   (unsafe? (error "Missing unsafe?") :type boolean))
 
 (defun new-call-op (target &key drop-rets? (form *default-form*) unsafe?)
-  (make-call-op :form form :target target :drop-rets? drop-rets? :unsafe? unsafe?))
+  (cond
+    ((eq target (int-add-func *math-lib*))
+     (new-inc-op :form form))
+    ((eq target (int-sub-func *math-lib*))
+     (new-dec-op :form form))
+    (t
+     (make-call-op :form form :target target :drop-rets? drop-rets? :unsafe? unsafe?))))
 
 (defmethod emit-lisp ((op call-op))
   (let ((pos (pos (call-form op))))
@@ -68,6 +74,19 @@
      (unless v
        (e-emit ,(pos (op-form op)) "Stack is empty"))
      (vm-push (copy (the val v)))))
+
+;; dec
+
+(defstruct (dec-op (:include op) (:conc-name dec-)))
+
+(defun new-dec-op (&key (form *default-form*))
+  (make-dec-op :form form))
+
+(defmethod emit-lisp ((op dec-op))
+  `(let ((y (vm-pop)) (x (vm-peek)))
+     (unless (and (eq (vm-type x) (int-type *abc-lib*)) (eq (vm-type y) (int-type *abc-lib*)))
+       (e-eval ,(pos (op-form op)) "Invalid dec args: ~a ~a" x y))
+     (decf (data x) (data y))))
 
 ;; drop
 
@@ -91,6 +110,33 @@
 
 (defmethod emit-lisp ((op goto-op))
   `(go ,(goto-label op)))
+
+;; inc
+
+(defstruct (inc-op (:include op) (:conc-name inc-)))
+
+(defun new-inc-op (&key (form *default-form*))
+  (make-inc-op :form form))
+
+(defmethod emit-lisp ((op inc-op))
+  `(let ((y (vm-pop)) (x (vm-peek)))
+     (unless (and (eq (vm-type x) (int-type *abc-lib*)) (eq (vm-type y) (int-type *abc-lib*)))
+       (e-eval (pos ,(op-form op)) "Invalid inc args: ~a ~a" x y))
+     (incf (data x) (data y))))
+
+;; is
+
+(defstruct (is-op (:include op) (:conc-name is-))
+  (x nil)
+  (y nil))
+
+(defun new-is-op (x y &key (form *default-form*))
+  (make-is-op :form form :x x :y y))
+
+(defmethod emit-lisp ((op is-op))
+  `(let ((y (or ,(is-y op) (vm-pop)))
+	 (x (or ,(is-x op) (vm-pop))))
+     (vm-push (new-val (bool-type *abc-lib*) (is x y)))))
 
 ;; label
 

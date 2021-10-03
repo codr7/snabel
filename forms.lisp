@@ -114,7 +114,7 @@
 (defmethod form-quote ((f id-form) in)
   (cons (new-lit-form (new-val (sym-type *abc-lib*) (id-name f)) :pos (pos f)) in))
 
-(defmethod form-val ((f lit-form))
+(defmethod form-val ((f id-form))
   (let ((v (scope-find (id-name f))))
     (when (and v (not (eq (vm-type v) (reg-type *abc-lib*))))
       v)))

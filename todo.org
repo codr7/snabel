@@ -1,9 +1,13 @@
-func fib (n Int) (Int) if n.< 2 n + fib n.- 1 fib n.- 2
-bench 100 fib -d -u 20
+func fibr (n Int) (Int) if n.< 2 n + fibr n.- 1 fibr n.- 2
+bench 100 fibr -d -u 20
 
-* add call flags
-** add t flag/tail call
-** add m flag/memoize
+func fibt (n Int a Int b Int) (Int)
+  if n.is 0 a if n.is 1 b fibt -u n.- 1 b a.+ b
+
+bench 10000 fibt -d -u 70 0 1
+
+* add t/tco call flag
+* add m/mem call flag
 * copy load op type propagation logic from alisp func
 * type check func rets
 * add stack type
