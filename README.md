@@ -137,10 +137,10 @@ Calls to functions may specify any of the following flags immediately following 
 ```
 
 #### --drop -d
-Drop (or don't even push) returned values as soon as possible during the call.
+Drops returned values as soon as possible during the call.
 
 #### --unsafe -u
-Skip type checks on arguments and returned values.
+Skips type checks on arguments and returned values.
 
 ### quoting
 Any expression may be quoted by prefixing with `'`.
