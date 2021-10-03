@@ -118,7 +118,7 @@ New functions may be defined using `func`.
 ### call flags
 Function calls may specify flags immediately following the target.
 
-#### --drop -d
+#### --drop | -d
 Drops returned values as soon as possible during the call.
 
 ```
@@ -139,9 +139,11 @@ Drops returned values as soon as possible during the call.
 []
 ```
 
-#### --unsafe -u
-Skips type checks on arguments and returned values.
-Automatically propagated to nested function calls.
+#### --tco | -t
+Reuses the existing call frame instead of pushing a new one.
+
+#### --unsafe | -u
+Skips type checks on arguments and return values.
 
 ### quoting
 Any expression may be quoted by prefixing with `'`.
@@ -236,4 +238,26 @@ SNABL> (let ((*vm* (new-vm))
   foo
   
 ; Evaluation aborted on #<SNABL::E-EMIT {1004285B63}>.
+```
+
+### performance
+
+The following snippet repeats the classical recursive fibonacci(20) a hundred times and measures the elapsed time in ms.
+
+```
+func fibr (n Int) (Int) 
+  if n.< 2 n + fibr n.- 1 fibr n.- 2
+bench 100 fibr -d -u 20
+
+[2778]
+```
+
+Fibonacci again, but now with a tail recursive algoritm; running fibonacci(70) ten thousand times.
+
+```
+func fibt (n Int a Int b Int) (Int)
+  if n.is 0 a if n.is 1 b fibt -t n.- 1 b a.+ b
+bench 10000 fibt -d -u 70 0 1
+
+[629]
 ```

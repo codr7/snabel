@@ -83,7 +83,8 @@
 	      (let* ((func (data v))
 		     (args (args func))
 		     (arg-count (length args))
-		     flags)		
+		     flags
+		     tco?)		
 		(labels ((rec ()
 			   (let ((f (first in)))
 			     (when (and (eq (type-of f) 'id-form)
@@ -91,6 +92,10 @@
 			       (ecase (id-name (pop in))
 				 ((:|-d| :|--drop|)
 				  (push-kw :drop-rets? t flags))
+				 ((:|-t| :|--tco|)
+				  (unless (start-label func)
+				    (e-emit (pos f) "TCO not supported: ~a" func))
+				  (setf tco? t))
 				 ((:|-u| :|--unsafe|)
 				  (push-kw :unsafe? t flags)))
 
@@ -102,7 +107,9 @@
 		    (e-emit (pos f) "Missing arg: ~a" (aref args i)))
 		  (setf in (form-emit (pop in) in)))
 
-		(emit-op (apply #'new-call-op func :form f flags))))
+		(if tco?
+		    (emit-op (new-goto-op (start-label func) :form f))
+		    (emit-op (apply #'new-call-op func :form f flags)))))
 	     ((eq (vm-type v) (prim-type *abc-lib*))
 	      (setf in (prim-call (data v) f in)))
 	     ((eq (vm-type v) (reg-type *abc-lib*))

@@ -1,16 +1,8 @@
-func fibr (n Int) (Int) 
-  if n.< 2 n + fibr n.- 1 fibr n.- 2
-
-bench 100 fibr -d -u 20
-
-func fibt (n Int a Int b Int) (Int)
-  if n.is 0 a if n.is 1 b fibt -u n.- 1 b a.+ b
-
-bench 10000 fibt -d -u 70 0 1
-
-* add t/tco call flag
 * join store/load on same reg
 ** add store.pop?
+* join push/inc/dec 
+** add inc/dec.y
+* how to get literals into inc/dec ops?
 * add m/mem call flag
 * copy load op type propagation logic from alisp func
 * type check func rets

@@ -47,7 +47,7 @@
 
 (defun vm-compile (&key (start-pc 0) (end-pc (length *code*)))
   (eval `(lambda ()
-	   (declare (optimize (safety 0) (debug 0) (speed 3)))
+	   (declare (optimize (debug 0) (safety 0) (speed 3)))
 	   ,(compile-main :start-pc start-pc :end-pc end-pc))))
 
 (defun vm-eval (&key (start-pc 0))
