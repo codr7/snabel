@@ -1,6 +1,6 @@
 (in-package snabl)
 
-(declaim (optimize (safety 3) (debug 0) (speed 3)))
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
 
 (defstruct op
   (form *default-form* :type form))
@@ -42,10 +42,11 @@
 ;; call
 
 (defstruct (call-op (:include op) (:conc-name call-))
-  (target nil))
+  (target nil)
+  (drop-rets? (error "Missing drop-rets?") :type boolean))
 
-(defun new-call-op (target &key (form *default-form*))
-  (make-call-op :form form :target target))
+(defun new-call-op (target &key drop-rets? (form *default-form*))
+  (make-call-op :form form :target target :drop-rets? drop-rets?))
 
 (defmethod emit-lisp ((op call-op))
   (let ((pos (pos (call-form op))))
@@ -54,7 +55,7 @@
 	 (e-eval ,pos "Missing call target"))
        (unless (applicable? target)
 	 (e-eval ,pos "Not applicable: ~a" target))
-       (call target ,pos))))
+       (call target ,pos :drop-rets? ,(call-drop-rets? op)))))
 
 ;; copy
 

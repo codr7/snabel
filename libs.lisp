@@ -126,7 +126,7 @@
   (lib-bind-func self :|dump|
       ((:|value| (any-type *abc-lib*)))
       ()
-      (lambda (self pos)
+      (lambda (self pos &key drop-rets?)
 	(dump (vm-pop))
 	(terpri)))
 
@@ -210,7 +210,7 @@
   (lib-bind-func self :<
       ((:|x| (any-type *abc-lib*)) (:|y| (any-type *abc-lib*)))
       ((bool-type *abc-lib*))
-      (lambda (self pos)
+      (lambda (self pos &key drop-rets?)
 	(let* ((y (vm-pop)) (x (vm-peek))
 	       (result (compare x y)))
 	  (setf (vm-type x) (bool-type *abc-lib*)
@@ -219,7 +219,7 @@
   (lib-bind-func self :>
       ((:|x| (any-type *abc-lib*)) (:|y| (any-type *abc-lib*)))
       ((bool-type *abc-lib*))
-      (lambda (self pos)
+      (lambda (self pos &key drop-rets?)
 	(let* ((y (vm-pop)) (x (vm-peek))
 	       (result (compare x y)))
 	  (setf (vm-type x) (bool-type *abc-lib*)
@@ -228,14 +228,14 @@
   (lib-bind-func self :+
       ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
       ((int-type *abc-lib*))
-      (lambda (self pos)
+      (lambda (self pos &key drop-rets?)
 	(let ((y (vm-pop)) (x (vm-peek)))
 	  (incf (data x) (data y)))))
 
   (lib-bind-func self :-
       ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
       ((int-type *abc-lib*))
-      (lambda (self pos)
+      (lambda (self pos &key drop-rets?)
 	(let ((y (vm-pop)) (x (vm-peek)))
 	  (decf (data x) (data y))))))
 

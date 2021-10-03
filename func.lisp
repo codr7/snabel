@@ -53,14 +53,14 @@
 	       (setf in (form-emit body-form in))
 	       
 	       (let ((lisp-func (vm-compile :start-pc start-pc)))
-		 (setf body (lambda (self pos)
+		 (setf body (lambda (self pos &key drop-rets?)
 			      (let ((f (new-frame pos self)))
 				(capture f)
 				(push-frame f)
-			      (unwind-protect
-				   (funcall lisp-func))
+				(unwind-protect
+				     (funcall lisp-func))
 				(pop-frame)
-				(restore f)))))
+				(restore f :drop-rets? drop-rets?)))))
 	       
 	       (emit-op (new-label-op end-label :form body-form))))
 	(end-scope))))
@@ -71,17 +71,20 @@
     (when (< (length *stack*) (length args))
       (return-from applicable?))
 
-    (dotimes (i (length args))
-      (let ((parent (arg-vm-type (aref args (- (length args) i 1))))
-	    (child (vm-type (aref *stack* (- (length *stack*) i 1)))))
-	(unless (isa child parent)
-	  (format t "applicable? ~a~%" *regs*)
-	  (return-from applicable?)))))
+    (let ((arg-offset (- (length args) 1))
+	  (stack-offset (- (length *stack*) 1)))
+      (dotimes (i (length args))
+	(declare (type integer i))
+	
+	(let ((parent (arg-vm-type (aref args (- arg-offset i))))
+	      (child (vm-type (aref *stack* (- stack-offset i)))))
+	  (unless (isa child parent)
+	    (return-from applicable?))))))
 
   t)
 
-(defmethod call ((self func) pos)
-  (funcall (body self) self pos))
+(defmethod call ((self func) pos &key drop-rets?)
+  (funcall (body self) self pos :drop-rets? drop-rets?))
 
 (defmethod print-object ((self func) out)
   (format out "Func(~a ~a ~a)" (symbol-name (name self)) (args self) (rets self)))

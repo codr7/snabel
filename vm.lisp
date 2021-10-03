@@ -18,7 +18,7 @@
 
 (defmethod initialize-instance :after ((self vm) &rest args &key &allow-other-keys)
   (with-slots (main-scope proc-cache) self
-    (push-proc (make-instance 'proc :stack (copy-stack nil)) :vm self)
+    (push-proc (make-instance 'proc :stack (stack-copy nil)) :vm self)
     (setf main-scope (begin-scope :proc proc-cache))))
 
 (defun emit-op (op)

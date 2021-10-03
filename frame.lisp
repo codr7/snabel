@@ -18,7 +18,10 @@
     (setf stack (stack-copy (subseq *stack* (- (length *stack*) (length (args func))))))
     (setf (slot-value *proc* 'stack) (stack-copy (subseq *stack* 0 (- (length *stack*) (length (args func))))))))
 
-(defmethod restore ((self frame))
+(defmethod restore ((self frame) &key drop-rets?)
+  (when drop-rets?
+    (return-from restore))
+  
   (with-slots (func stack) self
     (dotimes (i (length (rets func)))
       (vm-push (aref stack (+ (- (length stack) (length (rets func))) i))))))

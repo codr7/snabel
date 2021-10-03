@@ -1,6 +1,6 @@
 (in-package snabl)
 
-(declaim (optimize (safety 3) (debug 0) (speed 3)))
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
 
 (defclass proc ()
   ((scope :initform nil)
