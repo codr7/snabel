@@ -11,7 +11,8 @@
    (procs :initform (make-array 0 :element-type 'proc :fill-pointer 0) :reader procs)
    (proc-cache :initform nil :reader proc-cache)
    (frames :initform (make-array 0 :element-type 'frame :fill-pointer 0) :reader frames)
-   (frame-cache :initform nil :reader frame-cache)))
+   (frame-cache :initform nil :reader frame-cache)
+   (unsafe-depth :initform 0 :reader unsafe-depth)))
 
 (defun new-vm ()
   (make-instance 'vm))

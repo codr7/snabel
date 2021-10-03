@@ -53,7 +53,7 @@
 	       (setf in (form-emit body-form in))
 	       
 	       (let ((lisp-func (vm-compile :start-pc start-pc)))
-		 (setf body (lambda (self pos &key drop-rets? unsafe?)
+		 (setf body (lambda (self pos &key drop-rets?)
 			      (let ((f (new-frame pos self)))
 				(capture f)
 				(push-frame f)
@@ -86,11 +86,18 @@
   t)
 
 (defmethod call ((self func) pos &key drop-rets? unsafe?)
-  (unless (or unsafe? (func-applicable? self))
+  (unless (or *unsafe?* (func-applicable? self))
     (dump-stack :out *standard-error*)
     (e-eval pos "Not applicable: ~a" self))
 
-  (funcall (body self) self pos :drop-rets? drop-rets? :unsafe? unsafe?))
+  (when unsafe?
+    (incf (slot-value *vm* 'unsafe-depth)))
+  
+  (unwind-protect
+       (funcall (body self) self pos :drop-rets? drop-rets?)
+    (when unsafe?
+      (decf (slot-value *vm* 'unsafe-depth)))))
+  
 
 (defmethod print-object ((self func) out)
   (format out "Func(~a ~a ~a)" (symbol-name (name self)) (args self) (rets self)))

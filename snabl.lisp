@@ -39,5 +39,6 @@
 (define-symbol-macro *regs* (with-slots (regs) *proc* regs))
 (define-symbol-macro *scope* (with-slots (scope) *proc* scope))
 (define-symbol-macro *stack* (with-slots (stack) *proc* stack))
+(define-symbol-macro *unsafe?* (with-slots (unsafe-depth) *vm* (not (zerop unsafe-depth))))
 
 (defvar *vm*)
