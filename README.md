@@ -249,7 +249,7 @@ func fibr (n Int) (Int)
   if n.< 2 n + fibr n.- 1 fibr n.- 2
 bench 100 fibr -d -u 20
 
-[2778]
+[2586]
 ```
 
 Fibonacci again, but now with a tail recursive algoritm; running fibonacci(70) ten thousand times.
@@ -259,5 +259,5 @@ func fibt (n Int a Int b Int) (Int)
   if n.is 0 a if n.is 1 b fibt -t n.- 1 b a.+ b
 bench 10000 fibt -d -u 70 0 1
 
-[629]
+[592]
 ```

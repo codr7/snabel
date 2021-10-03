@@ -1,11 +1,8 @@
 * join store/load on same reg
 ** add store.pop?
-* join push/inc/dec 
-** add inc/dec.y
-* how to get literals into inc/dec ops?
+* --
 * add m/mem call flag
-* copy load op type propagation logic from alisp func
-* type check func rets
+* type check func rets unless *unsafe?*
 * add stack type
 ** add stack prim
 ** push copy of stack
@@ -31,3 +28,4 @@
 ** dot field access
 
 struct pos () (x Int y Int)
+* copy load op type propagation logic from alisp func

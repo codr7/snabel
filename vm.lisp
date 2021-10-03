@@ -1,6 +1,6 @@
 (in-package snabl)
 
-(declaim (optimize (safety 0) (debug 0) (speed 3)))
+(declaim (optimize (safety 3) (debug 0) (speed 3)))
 
 (defclass vm ()
   ((type-count :initform 0)
@@ -33,10 +33,26 @@
     (rec forms)))
 
 (defun compile-main (&key (start-pc 0) (end-pc (length *code*)))  
+  (let (prev-op)
+    (dotimes (i (- end-pc start-pc))
+      (let ((op (aref *code* (+ start-pc i))))
+	(cond
+	  ((and (eq (type-of prev-op) 'push-op)
+		(eq (type-of op) 'dec-op))
+	   (setf (dec-y op) (push-val prev-op))
+	   (setf (aref *code* (1- (+ start-pc i))) *nop*))
+	  ((and (eq (type-of prev-op) 'push-op)
+		(eq (type-of op) 'inc-op))
+	   (setf (inc-y op) (push-val prev-op))
+	   (setf (aref *code* (1- (+ start-pc i))) *nop*)))
+	(setf prev-op op))))
+    
   (let (out)
     (dotimes (i (- end-pc start-pc))
       (let ((op (aref *code* (+ start-pc i))))
-	(push (emit-lisp op) out)))
+	(let ((c (emit-lisp op)))
+	  (when c
+	    (push c out)))))
     
     (when *debug*
       (princ (reverse out))

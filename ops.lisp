@@ -77,13 +77,14 @@
 
 ;; dec
 
-(defstruct (dec-op (:include op) (:conc-name dec-)))
+(defstruct (dec-op (:include op) (:conc-name dec-))
+  (y nil))
 
 (defun new-dec-op (&key (form *default-form*))
   (make-dec-op :form form))
 
 (defmethod emit-lisp ((op dec-op))
-  `(let ((y (vm-pop)))
+  `(let ((y (or ,(dec-y op) (vm-pop))))
      (decf (data (vm-peek)) (data y))))
 
 ;; drop
@@ -111,13 +112,14 @@
 
 ;; inc
 
-(defstruct (inc-op (:include op) (:conc-name inc-)))
+(defstruct (inc-op (:include op) (:conc-name inc-))
+  (y nil))
 
 (defun new-inc-op (&key (form *default-form*))
   (make-inc-op :form form))
 
 (defmethod emit-lisp ((op inc-op))
-  `(let ((y (vm-pop)))
+  `(let ((y (or ,(inc-y op) (vm-pop))))
      (incf (data (vm-peek)) (data y))))
 
 ;; is
@@ -167,6 +169,14 @@
 
 (defmethod emit-lisp ((op load-op))
   `(vm-push (clone (get-reg ,(load-reg op)))))
+
+;; n
+
+(defstruct (nop (:include op)))
+
+(defmethod emit-lisp ((op nop)))
+
+(defvar *nop* (make-nop :form *default-form*))
 
 ;; push
 
