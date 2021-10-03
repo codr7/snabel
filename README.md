@@ -116,7 +116,6 @@ New functions may be defined using `func`.
 ```
 
 ### call flags
-Calls to functions may specify any of the following flags immediately following the target.
 
 ```
   func foo () (Int) 42
@@ -135,6 +134,8 @@ Calls to functions may specify any of the following flags immediately following 
 
 []
 ```
+
+Calls to functions may specify any of the following flags immediately following the target.
 
 #### --drop -d
 Drops returned values as soon as possible during the call.
