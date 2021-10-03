@@ -118,7 +118,7 @@ New functions may be defined using `func`.
 ### call flags
 Function calls may specify flags immediately following the target.
 
-#### --drop | -d
+#### |drop/d
 Drops returned values as soon as possible during the call.
 
 ```
@@ -134,15 +134,15 @@ Drops returned values as soon as possible during the call.
 
 []
 
-  foo --drop
+  foo|drop
 
 []
 ```
 
-#### --tco | -t
+#### |tco/t
 Reuses the existing call frame instead of pushing a new one.
 
-#### --unsafe | -u
+#### |unsafe/u
 Skips type checks on arguments and return values.
 
 ### quoting
@@ -242,22 +242,22 @@ SNABL> (let ((*vm* (new-vm))
 
 ### performance
 
-The following snippet repeats the classical recursive fibonacci(20) a hundred times and measures the elapsed time in ms.
+The following snippet repeats the classical recursive fibonacci(20) a hundred times and measures the elapsed time in ms, it currently runs around ten times as slow as Python3.
 
 ```
 func fibr (n Int) (Int) 
   if n.< 2 n + fibr n.- 1 fibr n.- 2
-bench 100 fibr -d -u 20
+bench 100 fibr|d|u 20
 
 [2586]
 ```
 
-Fibonacci again, but now with a tail recursive algoritm; running fibonacci(70) ten thousand times.
+More fibonacci, but now with a tail recursive algoritm; running f(70) ten thousand times; currently around six times as slow as Python3
 
 ```
 func fibt (n Int a Int b Int) (Int)
-  if n.is 0 a if n.is 1 b fibt -t n.- 1 b a.+ b
-bench 10000 fibt -d -u 70 0 1
+  if n.is 0 a if n.is 1 b fibt|t n.- 1 b a.+ b
+bench 10000 fibt|d|u 70 0 1
 
 [592]
 ```

@@ -67,7 +67,8 @@
 			    (if (or (ws? c)
 				    (char= c #\.)
 				    (char= c #\() (char= c #\))
-				    (char= c #\{) (char= c #\}))
+				    (char= c #\{) (char= c #\})
+				    (and (char= c #\|) (not (zerop (file-position out)))))
 				(unread-char c in)
 				(progn
 				  (incf (column pos))
