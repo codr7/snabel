@@ -201,9 +201,9 @@ SNABL> (let ((*vm* (new-vm))
          (repl))
   42 d
 
-((VM-PUSH (CLONE 42)) (UNLESS (DROP 1)
-                            (E-EMIT #S(POS :SOURCE "repl" :LINE 1 :COLUMN 3)
-                                    "Stack is empty")))
+((VM-PUSH (THE VAL (CLONE 42)))
+     (UNLESS (DROP (THE INTEGER 1))
+       (E-EMIT in 'repl' on line 1, column 3 Stack is empty)))
 []
   foo
   

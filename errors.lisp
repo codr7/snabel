@@ -4,9 +4,7 @@
   ((pos :initarg :pos :reader pos)
    (msg :initarg :msg :reader msg))
   (:report (lambda (self out)
-	     (format out "Error in '~a', line ~a, column ~a:~%~a"
-		     (source (pos self)) (line (pos self)) (column (pos self))
-		     (msg self)))))
+	     (format out "Error ~a:~%~a" (pos self) (msg self)))))
 
 (define-condition e-parse (e)
   ())

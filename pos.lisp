@@ -14,4 +14,7 @@
 (defmethod clone ((src pos))
   (copy-structure src))
 
+(defmethod print-object ((self pos) out)
+  (format out "in '~a' on line ~a, column ~a" (source self) (line self) (column self)))
+
 (defvar *default-pos* (new-pos "n/a"))
