@@ -2,7 +2,7 @@
 
 (declaim (optimize (safety 0) (debug 0) (speed 3)))
 
-(defclass vm (proc)
+(defclass vm ()
   ((type-count :initform 0)
    (abc-lib :initform nil)
    (math-lib :initform nil)
@@ -18,7 +18,7 @@
 
 (defmethod initialize-instance :after ((self vm) &rest args &key &allow-other-keys)
   (with-slots (main-scope proc-cache) self
-    (push-proc self :vm self)
+    (push-proc (make-instance 'proc :stack (copy-stack nil)) :vm self)
     (setf main-scope (begin-scope :proc proc-cache))))
 
 (defun emit-op (op)

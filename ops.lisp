@@ -1,6 +1,6 @@
 (in-package snabl)
 
-(declaim (optimize (safety 0) (debug 0) (speed 3)))
+(declaim (optimize (safety 3) (debug 0) (speed 3)))
 
 (defstruct op
   (form *default-form* :type form))
@@ -36,7 +36,7 @@
   (make-branch-op :form form :false-label false-label))
 
 (defmethod emit-lisp ((op branch-op))
-  `(unless (true? (vm-pop))
+  `(unless (true? (the val (vm-pop)))
      (go ,(branch-false-label op))))
 
 ;; call
@@ -67,7 +67,7 @@
   `(let ((v (vm-peek)))
      (unless v
        (e-emit ,(pos (op-form op)) "Stack is empty"))
-     (vm-push (copy v))))
+     (vm-push (copy (the val v)))))
 
 ;; drop
 
@@ -78,7 +78,7 @@
   (make-drop-op :form form :count count))
 
 (defmethod emit-lisp ((op drop-op))
-  `(unless (drop ,(drop-count op))
+  `(unless (drop (the integer ,(drop-count op)))
      (e-emit ,(pos (op-form op)) "Stack is empty")))
 
 ;; goto
@@ -135,7 +135,7 @@
   (make-push-op :form form :val val))
 
 (defmethod emit-lisp ((op push-op))
-  `(vm-push (clone ,(push-val op))))
+  `(vm-push (the val (clone ,(push-val op)))))
 
 ;; store
 
@@ -149,5 +149,5 @@
 
 (defmethod emit-lisp ((op store-op))
   `(setf (get-reg ,(store-reg op))
-	 (or ,(store-val op)
-	     (vm-pop :offset ,(store-offset op)))))
+	 (the val (or ,(store-val op)
+		      (vm-pop :offset ,(store-offset op))))))

@@ -10,9 +10,6 @@
 (defun char-digit (c)
   (- (char-code c) (char-code #\0)))
 
-(defun copy-vector (in)
-  (make-array (length in) :initial-contents in :fill-pointer (length in)))
-
 (defun delete-at (seq i)
   (let ((elt (aref seq i))
 	(slide (subseq seq (1+ i)))

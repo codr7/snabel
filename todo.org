@@ -1,5 +1,10 @@
 bench 100 fib 20
 
+* convert proc/frame to structs
+** vm
+** globals
+** replace slot-value
+
 * add call flags
 ** add d flag/drop
 ** add t flag/tail call

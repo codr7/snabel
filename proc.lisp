@@ -1,13 +1,15 @@
 (in-package snabl)
 
-(declaim (optimize (safety 0) (debug 0) (speed 3)))
+(declaim (optimize (safety 3) (debug 0) (speed 3)))
 
 (defclass proc ()
   ((scope :initform nil)
    (regs :initform (make-array *max-reg-count* :initial-element nil) :reader regs)
-   (stack :initform (make-array 0 :element-type 'val :fill-pointer 0))))
+   (stack :initarg :stack)))
 
 (defun push-proc (proc &key (vm *vm*))
+  (declare (type proc proc))
+  
   (with-slots (procs proc-cache) vm
     (vector-push-extend proc procs)
     (setf proc-cache proc)))
@@ -20,8 +22,8 @@
 
 (defun get-reg (reg)
   (with-slots (regs) *proc*
-    (aref regs reg)))
+    (aref regs (the integer reg))))
 
 (defun (setf get-reg) (val reg)
   (with-slots (regs) *proc*
-    (setf (aref regs reg) val)))
+    (setf (aref regs (the integer reg)) val)))
