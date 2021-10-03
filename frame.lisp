@@ -11,12 +11,14 @@
 
 (defmethod capture ((self frame))
   (with-slots (func regs scope stack) self
+    (setf scope (body-scope func))
+
     (dotimes (i (min-reg func))
       (setf (aref regs i) (aref *regs* i)))
     
-    (setf scope (body-scope func))
-    (setf stack (stack-copy *stack* :start (- (length *stack*) (length (args func)))))
-    (setf (slot-value *proc* 'stack) (stack-copy *stack* :start 0 :end (- (length *stack*) (length (args func)))))))
+    (let ((n (- (length *stack*) (length (args func)))))
+      (setf stack (stack-copy *stack* :start n))
+      (setf (slot-value *proc* 'stack) (stack-copy *stack* :start 0 :end n)))))
 
 (defmethod restore ((self frame) &key drop-rets?)
   (when drop-rets?
@@ -25,7 +27,7 @@
   (with-slots (func stack) self
     (dotimes (i (length (rets func)))
       (vm-push (aref stack (+ (- (length stack) (length (rets func))) i))))))
- 
+
 (defun push-frame (frame &key (vm *vm*))
   (push-proc frame :vm vm)
   (with-slots (frames frame-cache) vm
