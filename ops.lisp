@@ -193,13 +193,16 @@
 
 (defstruct (store-op (:include op) (:conc-name store-))
   (reg (error "Missing reg") :type integer)
-  (offset 0)
-  (val nil))
+  (offset (error "Missing offset" :type integer))
+  (val (error "Missing val"))
+  (pop? (error "Missing pop?") :type boolean))
 
-(defun new-store-op (reg &key (form *default-form*) (offset 0) val)
-  (make-store-op :form form :reg reg :offset offset :val val))
+(defun new-store-op (reg &key (form *default-form*) (offset 0) (pop? t) val)
+  (make-store-op :form form :reg reg :offset offset :pop? pop? :val val))
 
 (defmethod emit-lisp ((op store-op))
   `(setf (get-reg ,(store-reg op))
 	 (the val (or ,(store-val op)
-		      (vm-pop :offset ,(store-offset op))))))
+		      ,(if (store-pop? op)
+			   `(vm-pop :offset ,(store-offset op))
+			   `(clone (vm-peek :offset ,(store-offset op))))))))

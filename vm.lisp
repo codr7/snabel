@@ -1,6 +1,6 @@
 (in-package snabl)
 
-(declaim (optimize (safety 3) (debug 0) (speed 3)))
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
 
 (defclass vm ()
   ((type-count :initform 0)
@@ -37,6 +37,12 @@
     (dotimes (i (- end-pc start-pc))
       (let ((op (aref *code* (+ start-pc i))))
 	(cond
+	  ((and (eq (type-of prev-op) 'store-op)
+		(null (store-val prev-op))
+		(eq (type-of op) 'load-op)
+		(= (store-reg prev-op) (load-reg op)))
+	   (setf (store-pop? prev-op) nil)
+	   (setf (aref *code* (+ start-pc i)) *nop*))
 	  ((and (eq (type-of prev-op) 'push-op)
 		(eq (type-of op) 'dec-op))
 	   (setf (dec-y op) (push-val prev-op))

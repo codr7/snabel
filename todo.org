@@ -1,6 +1,3 @@
-* join store/load on same reg
-** add store.pop?
-* --
 * add m/mem call flag
 * type check func rets unless *unsafe?*
 * add stack type

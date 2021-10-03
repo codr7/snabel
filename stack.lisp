@@ -1,6 +1,6 @@
 (in-package snabl)
 
-(declaim (optimize (safety 3) (debug 0) (speed 3)))
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
 
 (defun vm-push (val)
   (declare (type val val))
@@ -9,10 +9,10 @@
 (defun vm-push-new (vm-type data)
   (vm-push (new-val (the vm-type vm-type) data)))
 
-(defun vm-peek ()
+(defun vm-peek (&key (offset 0))
   (let ((n (length *stack*)))
-    (unless (zerop n)
-      (aref *stack* (1- n)))))
+    (when (< offset n)
+      (aref *stack* (- n offset 1)))))
 
 (defun vm-pop (&key (offset 0))
   (declare (type integer offset))
