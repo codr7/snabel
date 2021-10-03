@@ -83,10 +83,8 @@
   (make-dec-op :form form))
 
 (defmethod emit-lisp ((op dec-op))
-  `(let ((y (vm-pop)) (x (vm-peek)))
-     (unless (and (eq (vm-type x) (int-type *abc-lib*)) (eq (vm-type y) (int-type *abc-lib*)))
-       (e-eval ,(pos (op-form op)) "Invalid dec args: ~a ~a" x y))
-     (decf (data x) (data y))))
+  `(let ((y (vm-pop)))
+     (decf (data (vm-peek)) (data y))))
 
 ;; drop
 
@@ -119,10 +117,8 @@
   (make-inc-op :form form))
 
 (defmethod emit-lisp ((op inc-op))
-  `(let ((y (vm-pop)) (x (vm-peek)))
-     (unless (and (eq (vm-type x) (int-type *abc-lib*)) (eq (vm-type y) (int-type *abc-lib*)))
-       (e-eval (pos ,(op-form op)) "Invalid inc args: ~a ~a" x y))
-     (incf (data x) (data y))))
+  `(let ((y (vm-pop)))
+     (incf (data (vm-peek)) (data y))))
 
 ;; is
 

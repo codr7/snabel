@@ -250,16 +250,12 @@
 	    ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
 	    ((int-type *abc-lib*))
 	    (lambda (self pos &key drop-rets?)
-	      (let ((y (vm-pop)) (x (vm-peek)))
-		(e-eval pos "Use inc op")))))
-		;;(incf (data x) (data y))))))
+	      (e-eval pos "Use inc op"))))
   
   (setf (slot-value self 'int-sub-func)
 	(lib-bind-func self :-
 	    ((:|x| (int-type *abc-lib*)) (:|y| (int-type *abc-lib*)))
 	    ((int-type *abc-lib*))
 	    (lambda (self pos &key drop-rets?)
-	      (let ((y (vm-pop)) (x (vm-peek)))
-		(e-eval pos "Use dec op"))))))
-		;;(decf (data x) (data y)))))))
+	      (e-eval pos "Use dec op")))))
 
