@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (define-symbol-macro time-units-per-ms (/ internal-time-units-per-second 1000))
 
 (defun all? (seq pred)

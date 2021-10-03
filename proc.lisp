@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (defclass proc ()
   ((scope :initform nil)
    (regs :initform (make-array *max-reg-count* :initial-element nil) :reader regs)

@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (defclass vm-type ()
   ((id :initform (next-type-id) :reader id)
    (name :initform (error "Missing name") :initarg :name :reader name)

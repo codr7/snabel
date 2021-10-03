@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (defclass scope ()
   ((parent-scope :initform (error "Missing parent-scope") :initarg :parent-scope :reader parent-scope)
    (bindings :initform (make-hash-table) :reader bindings)

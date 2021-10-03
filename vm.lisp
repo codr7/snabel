@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (defclass vm (proc)
   ((type-count :initform 0)
    (abc-lib :initform nil)
@@ -43,7 +45,9 @@
 	,@(nreverse out))))
 
 (defun vm-compile (&key (start-pc 0) (end-pc (length *code*)))
-  (eval `(lambda () ,(compile-main :start-pc start-pc :end-pc end-pc))))
+  (eval `(lambda ()
+	   (declare (optimize (safety 0) (debug 0) (speed 3)))
+	   ,(compile-main :start-pc start-pc :end-pc end-pc))))
 
 (defun vm-eval (&key (start-pc 0))
   (funcall (vm-compile :start-pc start-pc)))

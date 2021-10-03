@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (defstruct (val (:conc-name))
   (vm-type (error "Missing type") :type vm-type)
   (data (error "Missing data") :type t))

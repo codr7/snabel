@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (defmethod compare ((x number) (y number))
   (cond
     ((< x y) :lt)

@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (defclass prim ()
   ((name :initarg :name :initform (error "Missing name") :reader name)
    (arg-count :initarg :arg-count :initform (error "Missing arg count") :reader arg-count)

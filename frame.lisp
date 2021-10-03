@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (defclass frame (proc)
   ((pos :initform (error "Missing pos") :initarg :pos :reader pos)
    (func :initform (error "Missing func") :initarg :func :reader func)))
@@ -8,16 +10,18 @@
   (make-instance 'frame :pos pos :func func))
 
 (defmethod capture ((self frame))
-  (with-slots (func scope stack) self
+  (with-slots (func regs scope stack) self
+    (dotimes (i (min-reg func))
+      (setf (aref regs i) (aref *regs* i)))
+    
     (setf scope (body-scope func))
     (setf stack (copy-vector (subseq *stack* (- (length *stack*) (length (args func))))))
     (setf (slot-value *proc* 'stack) (copy-vector (subseq *stack* 0 (- (length *stack*) (length (args func))))))))
 
 (defmethod restore ((self frame))
   (with-slots (func stack) self
-    (let ((rets (subseq stack (- (length stack) (length (rets func))))))
-      (dovector (v rets)
-	(vm-push v)))))
+    (dotimes (i (length (rets func)))
+      (vm-push (aref stack (+ (- (length stack) (length (rets func))) i))))))
  
 (defun push-frame (frame &key (vm *vm*))
   (push-proc frame :vm vm)

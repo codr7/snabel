@@ -1,5 +1,7 @@
 (in-package snabl)
 
+(declaim (optimize (safety 0) (debug 0) (speed 3)))
+
 (defstruct arg
   (name nil :type symbol)
   (vm-type (error "Missing type") :type vm-type)
