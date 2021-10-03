@@ -15,8 +15,8 @@
       (setf (aref regs i) (aref *regs* i)))
     
     (setf scope (body-scope func))
-    (setf stack (stack-copy (subseq *stack* (- (length *stack*) (length (args func))))))
-    (setf (slot-value *proc* 'stack) (stack-copy (subseq *stack* 0 (- (length *stack*) (length (args func))))))))
+    (setf stack (stack-copy *stack* :start (- (length *stack*) (length (args func)))))
+    (setf (slot-value *proc* 'stack) (stack-copy *stack* :start 0 :end (- (length *stack*) (length (args func)))))))
 
 (defmethod restore ((self frame) &key drop-rets?)
   (when drop-rets?

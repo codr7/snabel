@@ -1,6 +1,6 @@
 (in-package snabl)
 
-(declaim (optimize (safety 0) (debug 0) (speed 3)))
+(declaim (optimize (safety 3) (debug 0) (speed 3)))
 
 (defun vm-push (val)
   (declare (type val val))
@@ -36,6 +36,14 @@
     (dump (aref *stack* i) :out out))
   (princ #\] out))
 
-(defun stack-copy (in)
+(defun stack-copy (in &key (start 0) end)
   (declare (type sequence in))
-  (make-array (length in) :element-type 'val :initial-contents in :fill-pointer (length in)))
+
+  (let* ((n (- (or end (length in)) start))
+	 (out (make-array n :element-type 'val :fill-pointer n)))
+    (declare (type integer n) (type array out))
+    
+    (dotimes (i n)
+      (setf (aref out i) (aref in (+ start i))))
+
+    out))
