@@ -115,6 +115,33 @@ New functions may be defined using `func`.
 [55]
 ```
 
+### call flags
+Calls to functions may specify any of the following flags immediately following the target.
+
+```
+  func foo () (Int) 42
+
+[]
+
+  foo
+
+[42]
+
+  d
+
+[]
+
+  foo --drop
+
+[]
+```
+
+#### --drop -d
+Drop (or don't even push) returned values as soon as possible during the call.
+
+#### --unsafe -u
+Skip type checks on arguments and returned values.
+
 ### quoting
 Any expression may be quoted by prefixing with `'`.
 

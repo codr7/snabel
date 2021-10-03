@@ -31,7 +31,6 @@
       (emit-op (new-label-op end-label :form f))
       (dovector (v (subseq *stack* prev-len))
 	(emit-op (new-push-op v :form f)))
-      ;(form-emit (push (new-lit-form v :pos (pos f)) in))
       (drop (- (length *stack*) prev-len))))
   in)
 
@@ -84,22 +83,25 @@
 	      (let* ((func (data v))
 		     (args (args func))
 		     (arg-count (length args))
-		     flags)
+		     flags)		
 		(labels ((rec ()
 			   (let ((f (first in)))
 			     (when (and (eq (type-of f) 'id-form)
 					(char= (char (symbol-name (id-name f)) 0) #\-))
 			       (ecase (id-name (pop in))
 				 ((:|-d| :|--drop|)
-				  (push t flags)
-				  (push :drop-rets? flags)))
+				  (push-kw :drop-rets? t flags))
+				 ((:|-u| :|--unsafe|)
+				  (push-kw :unsafe? t flags)))
+
 			       (rec)))))
 		  (rec))
-		
+
 		(dotimes (i arg-count)
 		  (unless in
 		    (e-emit (pos f) "Missing arg: ~a" (aref args i)))
 		  (setf in (form-emit (pop in) in)))
+
 		(emit-op (apply #'new-call-op func :form f flags))))
 	     ((eq (vm-type v) (prim-type *abc-lib*))
 	      (setf in (prim-call (data v) f in)))

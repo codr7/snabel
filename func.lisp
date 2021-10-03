@@ -53,7 +53,7 @@
 	       (setf in (form-emit body-form in))
 	       
 	       (let ((lisp-func (vm-compile :start-pc start-pc)))
-		 (setf body (lambda (self pos &key drop-rets?)
+		 (setf body (lambda (self pos &key drop-rets? unsafe?)
 			      (let ((f (new-frame pos self)))
 				(capture f)
 				(push-frame f)
@@ -66,10 +66,12 @@
 	(end-scope))))
   in)
 
-(defmethod applicable? ((self func))
+(defun func-applicable? (self)
+  (declare (type func self))
+  
   (with-slots (args) self
     (when (< (length *stack*) (length args))
-      (return-from applicable?))
+      (return-from func-applicable?))
 
     (let ((arg-offset (- (length args) 1))
 	  (stack-offset (- (length *stack*) 1)))
@@ -79,12 +81,16 @@
 	(let ((parent (arg-vm-type (aref args (- arg-offset i))))
 	      (child (vm-type (aref *stack* (- stack-offset i)))))
 	  (unless (isa child parent)
-	    (return-from applicable?))))))
+	    (return-from func-applicable?))))))
 
   t)
 
-(defmethod call ((self func) pos &key drop-rets?)
-  (funcall (body self) self pos :drop-rets? drop-rets?))
+(defmethod call ((self func) pos &key drop-rets? unsafe?)
+  (unless (or unsafe? (func-applicable? self))
+    (dump-stack :out *standard-error*)
+    (e-eval pos "Not applicable: ~a" self))
+
+  (funcall (body self) self pos :drop-rets? drop-rets? :unsafe? unsafe?))
 
 (defmethod print-object ((self func) out)
   (format out "Func(~a ~a ~a)" (symbol-name (name self)) (args self) (rets self)))

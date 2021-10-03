@@ -43,19 +43,18 @@
 
 (defstruct (call-op (:include op) (:conc-name call-))
   (target nil)
-  (drop-rets? (error "Missing drop-rets?") :type boolean))
+  (drop-rets? (error "Missing drop-rets?") :type boolean)
+  (unsafe? (error "Missing unsafe?") :type boolean))
 
-(defun new-call-op (target &key drop-rets? (form *default-form*))
-  (make-call-op :form form :target target :drop-rets? drop-rets?))
+(defun new-call-op (target &key drop-rets? (form *default-form*) unsafe?)
+  (make-call-op :form form :target target :drop-rets? drop-rets? :unsafe? unsafe?))
 
 (defmethod emit-lisp ((op call-op))
   (let ((pos (pos (call-form op))))
     `(let ((target (or ,(call-target op) (vm-pop))))
        (unless target
 	 (e-eval ,pos "Missing call target"))
-       (unless (applicable? target)
-	 (e-eval ,pos "Not applicable: ~a" target))
-       (call target ,pos :drop-rets? ,(call-drop-rets? op)))))
+       (call target ,pos :drop-rets? ,(call-drop-rets? op) :unsafe? ,(call-unsafe? op)))))
 
 ;; copy
 

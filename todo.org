@@ -1,4 +1,5 @@
-bench 100 #(fib -d 20)
+func fib (n Int) (Int) if n.< 2 n + fib -u n.- 1 fib -u n.- 2
+bench 100 fib -d -u 20
 
 * convert proc/frame to structs
 ** vm

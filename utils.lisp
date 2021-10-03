@@ -42,6 +42,11 @@
 	      (princ a out)))
 	  :keyword))
 
+(defmacro push-kw (key val out)
+  `(progn
+     (push ,val ,out)
+     (push ,key ,out)))
+
 (defun reverse-vector (vec &optional (start 0))
   (dotimes (i (floor (- (length vec) start) 2))
     (let ((tmp (aref vec (+ start i))))
