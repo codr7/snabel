@@ -1,10 +1,6 @@
-func fib (n Int) (Int) if n.< 2 n + fib -u n.- 1 fib -u n.- 2
+func fib (n Int) (Int) if n.< 2 n + fib n.- 1 fib n.- 2
 bench 100 fib -d -u 20
 
-* convert proc/frame to structs
-** vm
-** globals
-** replace slot-value
 * add call flags
 ** add t flag/tail call
 ** add m flag/memoize

@@ -2,12 +2,12 @@
 
 (declaim (optimize (safety 0) (debug 0) (speed 3)))
 
-(defclass frame (proc)
-  ((pos :initform (error "Missing pos") :initarg :pos :reader pos)
-   (func :initform (error "Missing func") :initarg :func :reader func)))
+(defstruct (frame (:include proc))
+  (pos (error "Missing pos"))
+  (func (error "Missing func")))
 
 (defun new-frame (pos func)
-  (make-instance 'frame :pos pos :func func))
+  (make-frame :pos pos :func func))
 
 (defmethod capture ((self frame))
   (with-slots (func regs scope stack) self

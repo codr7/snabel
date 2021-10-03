@@ -2,10 +2,10 @@
 
 (declaim (optimize (safety 0) (debug 0) (speed 3)))
 
-(defclass proc ()
-  ((scope :initform nil)
-   (regs :initform (make-array *max-reg-count* :initial-element nil) :reader regs)
-   (stack :initarg :stack)))
+(defstruct proc
+  (scope nil)
+  (regs (make-array *max-reg-count* :initial-element nil))
+  (stack nil))
 
 (defun push-proc (proc &key (vm *vm*))
   (declare (type proc proc))
@@ -21,9 +21,7 @@
       (setf proc-cache (unless (zerop n) (aref procs (1- n)))))))
 
 (defun get-reg (reg)
-  (with-slots (regs) *proc*
-    (aref regs (the integer reg))))
+  (aref *regs* (the integer reg)))
 
 (defun (setf get-reg) (val reg)
-  (with-slots (regs) *proc*
-    (setf (aref regs (the integer reg)) val)))
+  (setf (aref *regs* (the integer reg)) val))
